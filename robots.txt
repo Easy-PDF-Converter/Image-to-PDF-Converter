@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://easy-pdf-converter.github.io/image-to-pdf-converter/sitemap.xml

@@ -1,0 +1,2287 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Image to PDF Converter — Ultra-Premium, Private, In-Browser</title>
+<meta name="description" content="Convert JPG, PNG, WebP, GIF and BMP images into polished, print-ready PDFs. Reorder pages, apply filters, add watermarks, headers, footers and page numbers — entirely inside your browser. No uploads, no accounts.">
+<link rel="canonical" href="https://easy-pdf-converter.github.io/image-to-pdf-converter/">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;500;600;700;800&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   ULTRA-PREMIUM DESIGN SYSTEM
+   ============================================================ */
+*,*::before,*::after{box-sizing:border-box}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  margin:0;font-family:var(--font-body);line-height:1.65;
+  color:var(--text);background:var(--bg);
+  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  transition:background .35s,color .35s;overflow-x:hidden
+}
+img,canvas{display:block;max-width:100%}
+button{font-family:inherit;cursor:pointer}
+a{color:var(--primary);text-decoration:none}
+a:hover{text-decoration:underline}
+::selection{background:rgba(99,102,241,.28)}
+:focus-visible{outline:2px solid var(--primary);outline-offset:3px;border-radius:6px}
+
+/* ---------- Tokens ---------- */
+:root{
+  --bg:#07070c; --bg-elevated:#0e0e16; --bg-subtle:#12121c; --bg-muted:#171722;
+  --text:#f4f4f7; --text-muted:#a1a1b5; --text-subtle:#6b6b80;
+  --border:#1e1e2e; --border-strong:#2e2e42;
+  --primary:#818cf8; --primary-hover:#a5b4fc; --primary-fg:#07070c;
+  --accent:#22d3ee; --accent-2:#f472b6;
+  --success:#34d399; --danger:#f87171; --warning:#fbbf24;
+  --gradient:linear-gradient(135deg,#818cf8 0%,#a855f7 45%,#ec4899 100%);
+  --gradient-soft:linear-gradient(135deg,rgba(129,140,248,.12),rgba(236,72,153,.12));
+  --gradient-glow:linear-gradient(135deg,rgba(129,140,248,.5),rgba(236,72,153,.5));
+  --shadow-sm:0 1px 2px rgba(0,0,0,.5);
+  --shadow-md:0 4px 16px rgba(0,0,0,.45),0 1px 2px rgba(0,0,0,.3);
+  --shadow-lg:0 16px 48px rgba(0,0,0,.55),0 4px 12px rgba(0,0,0,.35);
+  --shadow-xl:0 32px 80px rgba(0,0,0,.65),0 12px 24px rgba(0,0,0,.4);
+  --shadow-glow:0 0 40px rgba(129,140,248,.18);
+  --radius-sm:10px; --radius-md:14px; --radius-lg:20px; --radius-xl:28px;
+  --font-display:'Sora',system-ui,sans-serif;
+  --font-body:'Manrope',system-ui,-apple-system,sans-serif;
+  --ad-bg:#0e0e16; --ad-border:#242438; --ad-label:#6b6b80;
+  --max-w:1200px; --narrow-w:780px;
+}
+[data-theme="light"]{
+  --bg:#fafafa; --bg-elevated:#ffffff; --bg-subtle:#f4f4f7; --bg-muted:#ececf1;
+  --text:#0a0a0f; --text-muted:#52526a; --text-subtle:#7b7b93;
+  --border:#e2e2ea; --border-strong:#d0d0dc;
+  --primary:#4f46e5; --primary-hover:#4338ca; --primary-fg:#ffffff;
+  --accent:#0891b2; --accent-2:#db2777;
+  --success:#059669; --danger:#dc2626; --warning:#d97706;
+  --gradient:linear-gradient(135deg,#4f46e5 0%,#9333ea 45%,#db2777 100%);
+  --gradient-soft:linear-gradient(135deg,rgba(79,70,229,.08),rgba(219,39,119,.08));
+  --gradient-glow:linear-gradient(135deg,rgba(79,70,229,.3),rgba(219,39,119,.3));
+  --shadow-sm:0 1px 2px rgba(10,10,15,.04);
+  --shadow-md:0 4px 16px rgba(10,10,15,.06),0 1px 2px rgba(10,10,15,.04);
+  --shadow-lg:0 16px 48px rgba(10,10,15,.08),0 4px 12px rgba(10,10,15,.04);
+  --shadow-xl:0 32px 80px rgba(10,10,15,.1),0 12px 24px rgba(10,10,15,.05);
+  --shadow-glow:0 0 40px rgba(79,70,229,.12);
+  --ad-bg:#f4f4f7; --ad-border:#d8d8e2; --ad-label:#7b7b93;
+}
+
+/* ---------- Base layout ---------- */
+.container{max-width:var(--max-w);margin:0 auto;padding:0 24px}
+.container-narrow{max-width:var(--narrow-w);margin:0 auto;padding:0 24px}
+section{padding:96px 0}
+@media (max-width:768px){ section{padding:64px 0} .container,.container-narrow{padding:0 16px} }
+
+/* ---------- Typography ---------- */
+h1,h2,h3,h4{line-height:1.15;letter-spacing:-.03em;margin:0 0 .5em;color:var(--text);font-family:var(--font-display)}
+h1{font-size:clamp(2.4rem,6vw,4.2rem);letter-spacing:-.04em;font-weight:800}
+h2{font-size:clamp(1.7rem,3.6vw,2.5rem);letter-spacing:-.03em;font-weight:700;margin-top:0}
+h3{font-size:1.12rem;font-weight:600}
+p{margin:0 0 1em;color:var(--text-muted)}
+.eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:.72rem;font-weight:600;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--primary);
+  background:var(--gradient-soft);border:1px solid var(--border);
+  border-radius:999px;padding:7px 16px;margin-bottom:24px;font-family:var(--font-body)}
+.eyebrow::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--primary);
+  box-shadow:0 0 0 3px rgba(129,140,248,.25);animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.em-display{font-family:var(--font-display);font-style:italic;font-weight:400;
+  background:var(--gradient);-webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent}
+
+/* ---------- Buttons ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  border:1px solid transparent;border-radius:var(--radius-sm);padding:10px 18px;
+  font-size:.9rem;font-weight:600;letter-spacing:-.01em;transition:all .2s cubic-bezier(.4,0,.2,1);
+  text-decoration:none;white-space:nowrap;line-height:1;font-family:var(--font-body)}
+.btn:hover{text-decoration:none}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn-primary{background:var(--gradient);color:#fff;box-shadow:0 4px 20px rgba(129,140,248,.4);
+  position:relative;overflow:hidden}
+.btn-primary::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,
+  transparent,rgba(255,255,255,.2),transparent);transform:translateX(-100%);transition:transform .5s}
+.btn-primary:hover::before{transform:translateX(100%)}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 8px 32px rgba(129,140,248,.55)}
+.btn-primary:active{transform:translateY(0)}
+.btn-ghost{background:transparent;color:var(--text);border-color:var(--border-strong)}
+.btn-ghost:hover{background:var(--bg-subtle);border-color:var(--text-subtle)}
+.btn-danger{background:var(--danger);color:#fff}
+.btn-danger:hover{filter:brightness(1.1)}
+.btn-lg{padding:14px 26px;font-size:1rem;border-radius:var(--radius-md)}
+.btn-sm{padding:7px 13px;font-size:.8rem;border-radius:8px}
+.btn-xs{padding:5px 9px;font-size:.72rem;border-radius:6px}
+.btn-icon{width:38px;height:38px;padding:0;border-radius:10px;background:transparent;
+  color:var(--text-muted);border:1px solid var(--border);display:grid;place-items:center;
+  transition:all .15s}
+.btn-icon:hover{background:var(--bg-subtle);color:var(--text);border-color:var(--border-strong)}
+
+/* ---------- Header ---------- */
+.site-header{position:sticky;top:0;z-index:60;background:rgba(7,7,12,.72);
+  backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);
+  border-bottom:1px solid var(--border);transition:all .3s}
+[data-theme="light"] .site-header{background:rgba(250,250,250,.78)}
+.header-inner{display:flex;align-items:center;justify-content:space-between;gap:16px;height:68px}
+.logo{display:flex;align-items:center;gap:11px;font-weight:700;font-size:1.02rem;
+  color:var(--text);letter-spacing:-.02em;font-family:var(--font-display)}
+.logo:hover{text-decoration:none}
+.logo-mark{width:34px;height:34px;border-radius:10px;background:var(--gradient);
+  display:grid;place-items:center;color:#fff;font-size:.92rem;font-weight:800;
+  box-shadow:0 4px 16px rgba(129,140,248,.45);font-family:var(--font-display)}
+.nav{display:flex;gap:2px;align-items:center}
+.nav a{padding:8px 15px;border-radius:8px;font-size:.88rem;font-weight:500;
+  color:var(--text-muted);transition:all .15s}
+.nav a:hover{color:var(--text);background:var(--bg-subtle);text-decoration:none}
+.header-actions{display:flex;gap:8px;align-items:center}
+@media (max-width:820px){ .nav{display:none} }
+
+/* ---------- Hero ---------- */
+.hero{position:relative;padding:120px 0 100px;overflow:hidden;isolation:isolate;text-align:center}
+.hero::before{content:'';position:absolute;inset:0;z-index:-1;
+  background:
+    radial-gradient(55% 45% at 18% 8%,rgba(129,140,248,.22),transparent 60%),
+    radial-gradient(45% 45% at 82% 15%,rgba(236,72,153,.18),transparent 60%),
+    radial-gradient(50% 50% at 50% 100%,rgba(34,211,238,.10),transparent 60%)}
+.hero::after{content:'';position:absolute;inset:0;z-index:-1;opacity:.35;
+  background-image:
+    linear-gradient(var(--border) 1px,transparent 1px),
+    linear-gradient(90deg,var(--border) 1px,transparent 1px);
+  background-size:72px 72px;
+  mask-image:radial-gradient(ellipse 65% 55% at 50% 35%,#000 25%,transparent 100%);
+  -webkit-mask-image:radial-gradient(ellipse 65% 55% at 50% 35%,#000 25%,transparent 100%)}
+.hero h1{margin-bottom:26px}
+.hero-sub{font-size:clamp(1rem,1.7vw,1.2rem);color:var(--text-muted);
+  max-width:640px;margin:0 auto 40px;line-height:1.65}
+.hero-cta{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin-bottom:64px}
+.hero-stats{display:flex;gap:64px;justify-content:center;flex-wrap:wrap;
+  padding-top:36px;border-top:1px solid var(--border);max-width:620px;margin:0 auto}
+.hero-stats > div{text-align:center}
+.hero-stats strong{display:block;font-size:1.75rem;font-weight:700;letter-spacing:-.04em;
+  background:var(--gradient);-webkit-background-clip:text;background-clip:text;
+  -webkit-text-fill-color:transparent;margin-bottom:2px;font-family:var(--font-display)}
+.hero-stats span{font-size:.8rem;color:var(--text-subtle);font-weight:500;letter-spacing:.02em}
+@media (max-width:640px){ .hero{padding:80px 0 64px} .hero-stats{gap:40px} }
+
+/* ---------- Ad slots ---------- */
+.ad-slot{position:relative;display:block;width:100%;margin:0 auto;padding:14px;
+  background:var(--ad-bg);border:1px dashed var(--ad-border);border-radius:var(--radius-md);
+  text-align:center;overflow:hidden;contain:layout paint;max-width:var(--max-w)}
+.ad-slot::before{content:"Advertisement";display:block;font-size:.64rem;letter-spacing:.12em;
+  text-transform:uppercase;color:var(--ad-label);margin-bottom:8px;font-weight:600}
+.ad-slot__inner{display:flex;align-items:center;justify-content:center;width:100%;min-height:90px}
+.ad-slot--leader .ad-slot__inner{min-height:90px}
+.ad-slot--rect .ad-slot__inner{min-height:250px}
+@media (max-width:768px){ .ad-slot--rect .ad-slot__inner{min-height:100px} }
+@media print{ .ad-slot{display:none!important} }
+.ad-wrap{padding:0 24px 48px}
+@media (max-width:640px){ .ad-wrap{padding:0 16px 36px} }
+
+/* ---------- Tool ---------- */
+.tool-section{padding-top:0}
+.tool-card{background:var(--bg-elevated);border:1px solid var(--border);
+  border-radius:var(--radius-xl);box-shadow:var(--shadow-xl);overflow:hidden;
+  position:relative}
+.tool-card::before{content:'';position:absolute;inset:0;border-radius:inherit;
+  padding:1px;background:linear-gradient(135deg,rgba(129,140,248,.3),transparent 40%,transparent 60%,rgba(236,72,153,.3));
+  -webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);
+  -webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+.tool-header{padding:36px 36px 8px}
+.tool-header h2{font-size:clamp(1.5rem,2.6vw,1.9rem);margin-bottom:8px}
+.tool-header p{color:var(--text-muted);margin-bottom:0;max-width:62ch}
+.tool-body{padding:28px 36px 36px}
+@media (max-width:640px){ .tool-header{padding:24px 20px 4px} .tool-body{padding:20px} }
+
+/* Upload zone */
+.upload-zone{position:relative;border:2px dashed var(--border-strong);
+  border-radius:var(--radius-lg);padding:56px 24px;text-align:center;
+  background:var(--bg-subtle);transition:all .25s;cursor:pointer;overflow:hidden}
+.upload-zone::before{content:'';position:absolute;inset:0;
+  background:var(--gradient-soft);opacity:0;transition:opacity .25s;pointer-events:none}
+.upload-zone:hover,.upload-zone.over{border-color:var(--primary);
+  background:var(--gradient-soft);transform:translateY(-2px);box-shadow:var(--shadow-md)}
+.upload-zone:hover::before,.upload-zone.over::before{opacity:1}
+.upload-icon{width:64px;height:64px;margin:0 auto 18px;border-radius:18px;
+  background:var(--bg-elevated);border:1px solid var(--border);display:grid;place-items:center;
+  font-size:1.6rem;color:var(--primary);box-shadow:var(--shadow-md);position:relative}
+.upload-zone h3{margin-bottom:6px;font-size:1.05rem;position:relative}
+.upload-zone p{color:var(--text-muted);font-size:.9rem;margin:0 0 4px;position:relative}
+.upload-hint{color:var(--text-subtle);font-size:.8rem;margin-top:14px!important;position:relative}
+.upload-formats{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:16px;position:relative}
+.format-badge{font-size:.68rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase;
+  padding:4px 10px;border-radius:6px;background:var(--bg-elevated);border:1px solid var(--border);
+  color:var(--text-subtle)}
+
+/* Pages */
+.pages-area{margin-top:28px}
+.batch-toolbar{display:flex;justify-content:space-between;align-items:center;gap:12px;
+  flex-wrap:wrap;padding:12px 0;border-bottom:1px solid var(--border);margin-bottom:18px}
+.batch-left{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.batch-right{display:flex;gap:6px;flex-wrap:wrap}
+.select-all{display:flex;align-items:center;gap:8px;font-size:.86rem;font-weight:500;
+  cursor:pointer;color:var(--text)}
+.select-all input{width:16px;height:16px;accent-color:var(--primary);cursor:pointer}
+.page-count{font-size:.8rem;color:var(--text-subtle);font-variant-numeric:tabular-nums}
+.page-count strong{color:var(--text);font-weight:600}
+
+/* Pages grid */
+.pages-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(155px,1fr));
+  gap:16px;margin-bottom:8px}
+@media (max-width:480px){ .pages-grid{grid-template-columns:repeat(2,1fr);gap:10px} }
+.page-card{position:relative;border:1px solid var(--border);border-radius:var(--radius-md);
+  background:var(--bg-elevated);overflow:hidden;transition:all .2s cubic-bezier(.4,0,.2,1);
+  animation:cardIn .3s ease both}
+@keyframes cardIn{from{opacity:0;transform:scale(.94)}to{opacity:1;transform:scale(1)}}
+.page-card:hover{border-color:var(--border-strong);box-shadow:var(--shadow-md);transform:translateY(-3px)}
+.page-card.selected{border-color:var(--primary);box-shadow:0 0 0 3px rgba(129,140,248,.2)}
+.page-card.dragging{opacity:.35;cursor:grabbing;transform:scale(.98)}
+.page-card.drag-over{border-color:var(--primary);border-style:dashed;background:var(--gradient-soft)}
+.page-preview{position:relative;aspect-ratio:3/4;background:
+  repeating-conic-gradient(#171722 0% 25%,#0e0e16 0% 50%) 50%/14px 14px;
+  display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:zoom-in}
+[data-theme="light"] .page-preview{background:
+  repeating-conic-gradient(#ececf1 0% 25%,#fff 0% 50%) 50%/14px 14px}
+.page-preview canvas{width:100%;height:100%;object-fit:contain;transition:transform .3s}
+.page-card:hover .page-preview canvas{transform:scale(1.03)}
+.page-badge{position:absolute;top:8px;left:8px;background:rgba(7,7,12,.88);color:#fff;
+  font-size:.7rem;font-weight:700;padding:3px 9px;border-radius:6px;
+  backdrop-filter:blur(6px);font-variant-numeric:tabular-nums;z-index:2}
+.page-check{position:absolute;top:8px;right:8px;width:22px;height:22px;
+  display:grid;place-items:center;cursor:pointer;z-index:3}
+.page-check input{appearance:none;-webkit-appearance:none;width:20px;height:20px;
+  border:2px solid rgba(255,255,255,.85);border-radius:6px;background:rgba(7,7,12,.5);
+  cursor:pointer;transition:all .15s;position:relative;backdrop-filter:blur(6px)}
+.page-check input:checked{background:var(--primary);border-color:var(--primary)}
+.page-check input:checked::after{content:'✓';position:absolute;inset:0;
+  display:grid;place-items:center;color:#fff;font-size:.7rem;font-weight:700}
+.page-actions{position:absolute;bottom:0;left:0;right:0;
+  background:linear-gradient(to top,rgba(7,7,12,.9),rgba(7,7,12,0));
+  padding:28px 8px 8px;display:flex;gap:4px;justify-content:center;
+  opacity:0;transform:translateY(4px);transition:opacity .2s,transform .2s}
+.page-card:hover .page-actions,.page-card:focus-within .page-actions{opacity:1;transform:translateY(0)}
+.page-action{width:30px;height:30px;padding:0;border-radius:8px;
+  background:rgba(255,255,255,.14);border:1px solid rgba(255,255,255,.18);
+  color:#fff;font-size:.78rem;display:grid;place-items:center;
+  transition:all .15s;backdrop-filter:blur(10px)}
+.page-action:hover{background:rgba(255,255,255,.28);transform:scale(1.08)}
+.page-action.danger:hover{background:var(--danger);border-color:var(--danger)}
+.page-info{padding:9px 11px;border-top:1px solid var(--border)}
+.page-name{font-size:.76rem;font-weight:600;color:var(--text);
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;display:block}
+.page-meta{font-size:.66rem;color:var(--text-subtle);font-variant-numeric:tabular-nums}
+
+/* Settings */
+.settings-panel{margin-top:28px;padding:24px;background:var(--bg-subtle);
+  border:1px solid var(--border);border-radius:var(--radius-lg)}
+.settings-panel h3{font-size:.76rem;font-weight:700;text-transform:uppercase;
+  letter-spacing:.08em;color:var(--text-subtle);margin-bottom:16px;margin-top:0}
+.settings-group + .settings-group{margin-top:28px;padding-top:28px;border-top:1px solid var(--border)}
+.settings-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px}
+.field{display:flex;flex-direction:column;gap:6px}
+.field label{font-size:.78rem;font-weight:600;color:var(--text)}
+.field select,.field input[type="text"],.field input[type="number"]{
+  padding:10px 12px;border:1px solid var(--border-strong);border-radius:var(--radius-sm);
+  background:var(--bg-elevated);color:var(--text);font-size:.86rem;font-family:inherit;
+  transition:border-color .15s}
+.field select:focus,.field input:focus{outline:2px solid var(--primary);outline-offset:1px;
+  border-color:var(--primary)}
+.field .hint{font-size:.7rem;color:var(--text-subtle);line-height:1.4}
+.custom-size{display:grid;grid-template-columns:1fr 1fr;gap:8px;grid-column:1/-1}
+input[type="range"]{width:100%;accent-color:var(--primary);cursor:pointer}
+.quality-presets{display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap}
+.quality-presets button{flex:1;min-width:70px;padding:9px 10px;border:1px solid var(--border-strong);
+  background:var(--bg-elevated);border-radius:var(--radius-sm);font-size:.76rem;
+  font-weight:600;color:var(--text-muted);transition:all .15s}
+.quality-presets button:hover{border-color:var(--primary);color:var(--text)}
+.quality-presets button.active{background:var(--gradient);color:#fff;border-color:transparent;
+  box-shadow:0 2px 12px rgba(129,140,248,.35)}
+.advanced{margin-top:24px;border-top:1px solid var(--border);padding-top:18px}
+.advanced summary{cursor:pointer;font-size:.86rem;font-weight:600;color:var(--text-muted);
+  list-style:none;display:flex;align-items:center;gap:6px;user-select:none}
+.advanced summary::-webkit-details-marker{display:none}
+.advanced summary::before{content:'▸';display:inline-block;transition:transform .2s;font-size:.8rem}
+.advanced[open] summary::before{transform:rotate(90deg)}
+.advanced summary:hover{color:var(--text)}
+.advanced > .settings-grid{margin-top:18px}
+.toggle-row{display:flex;align-items:center;gap:10px;padding:11px 14px;
+  background:var(--bg-elevated);border:1px solid var(--border-strong);border-radius:var(--radius-sm)}
+.toggle-row input[type="checkbox"]{width:16px;height:16px;accent-color:var(--primary);cursor:pointer}
+.toggle-row label{font-size:.82rem;font-weight:500;cursor:pointer;margin:0}
+.filter-row{display:flex;gap:6px;flex-wrap:wrap}
+.filter-row button{padding:6px 12px;border:1px solid var(--border-strong);background:var(--bg-elevated);
+  border-radius:var(--radius-sm);font-size:.74rem;font-weight:500;color:var(--text-muted);
+  transition:all .15s}
+.filter-row button:hover{border-color:var(--primary);color:var(--text)}
+.filter-row button.active{background:var(--primary);color:var(--primary-fg);border-color:var(--primary)}
+
+/* Action bar */
+.action-bar{margin-top:28px;padding-top:24px;border-top:1px solid var(--border);
+  display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.action-info{font-size:.84rem;color:var(--text-muted);display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.action-info strong{color:var(--text);font-weight:600}
+.action-buttons{display:flex;gap:10px;flex-wrap:wrap}
+
+/* Progress */
+.progress-panel{margin-top:18px;padding:20px;background:var(--bg-subtle);
+  border:1px solid var(--border);border-radius:var(--radius-md)}
+.progress-bar{height:6px;background:var(--border);border-radius:999px;overflow:hidden;margin-bottom:12px}
+.progress-fill{height:100%;width:0;background:var(--gradient);border-radius:999px;
+  transition:width .35s cubic-bezier(.4,0,.2,1)}
+.progress-text{font-size:.84rem;color:var(--text-muted);margin:0;font-variant-numeric:tabular-nums}
+
+/* Result */
+.result-panel{margin-top:18px;padding:24px;background:var(--bg-subtle);
+  border:1px solid var(--success);border-radius:var(--radius-lg);
+  display:flex;align-items:center;gap:18px;flex-wrap:wrap;
+  animation:resultIn .4s cubic-bezier(.4,0,.2,1) both;box-shadow:0 0 32px rgba(52,211,153,.12)}
+@keyframes resultIn{from{opacity:0;transform:translateY(12px) scale(.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+.result-icon{width:48px;height:48px;border-radius:50%;background:var(--success);
+  display:grid;place-items:center;color:#fff;font-size:1.3rem;font-weight:700;flex-shrink:0;
+  box-shadow:0 4px 16px rgba(52,211,153,.3)}
+.result-info{flex:1;min-width:160px}
+.result-info strong{display:block;font-size:.94rem;color:var(--text);margin-bottom:2px}
+.result-info span{font-size:.8rem;color:var(--text-muted);font-variant-numeric:tabular-nums}
+.result-actions{display:flex;gap:8px;flex-wrap:wrap}
+
+/* ---------- Features ---------- */
+.features-section{background:var(--bg-subtle);border-top:1px solid var(--border);
+  border-bottom:1px solid var(--border)}
+.features-section h2{text-align:center;margin-bottom:14px}
+.features-section > .container > p{text-align:center;max-width:58ch;margin:0 auto 56px;color:var(--text-muted)}
+.features-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:20px}
+.feature-card{background:var(--bg-elevated);border:1px solid var(--border);
+  border-radius:var(--radius-lg);padding:30px;transition:all .25s;position:relative;overflow:hidden}
+.feature-card::before{content:'';position:absolute;inset:0;border-radius:inherit;
+  background:var(--gradient-soft);opacity:0;transition:opacity .25s;pointer-events:none}
+.feature-card:hover{border-color:var(--border-strong);box-shadow:var(--shadow-lg);transform:translateY(-4px)}
+.feature-card:hover::before{opacity:1}
+.feature-icon{position:relative;width:48px;height:48px;border-radius:14px;background:var(--bg-subtle);
+  border:1px solid var(--border);display:grid;place-items:center;margin-bottom:18px;
+  color:var(--primary);transition:all .25s}
+.feature-card:hover .feature-icon{background:var(--gradient);color:#fff;border-color:transparent;
+  box-shadow:0 4px 16px rgba(129,140,248,.35)}
+.feature-card h3{position:relative;margin-bottom:8px;font-size:1rem}
+.feature-card p{position:relative;font-size:.86rem;margin:0;color:var(--text-muted)}
+
+/* ---------- Content ---------- */
+.content-article{padding:96px 0}
+.content-article h2{margin-top:72px;padding-top:40px;border-top:1px solid var(--border)}
+.content-article h2:first-of-type{margin-top:0;padding-top:0;border-top:none}
+.content-article h3{margin-top:32px;color:var(--text);font-size:1.08rem}
+.content-article p{color:var(--text-muted);font-size:.95rem;line-height:1.75}
+.content-article ol,.content-article ul{color:var(--text-muted);padding-left:1.3rem;font-size:.95rem}
+.content-article ol li,.content-article ul li{margin-bottom:.55em}
+.content-article strong{color:var(--text);font-weight:600}
+.note{background:var(--bg-subtle);border-left:3px solid var(--primary);
+  padding:16px 20px;margin:24px 0;border-radius:0 var(--radius-md) var(--radius-md) 0}
+.note p{margin:0;font-size:.9rem;color:var(--text-muted)}
+.toc{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 56px;padding-bottom:28px;
+  border-bottom:1px solid var(--border)}
+.toc a{font-size:.8rem;font-weight:500;color:var(--text-muted);padding:6px 13px;
+  border:1px solid var(--border);border-radius:999px;transition:all .15s}
+.toc a:hover{color:var(--primary);border-color:var(--primary);text-decoration:none;
+  background:var(--gradient-soft)}
+
+/* FAQ */
+details{background:var(--bg-subtle);border:1px solid var(--border);
+  border-radius:var(--radius-md);padding:16px 20px;margin-bottom:10px;transition:all .2s}
+details[open]{background:var(--bg-elevated);border-color:var(--border-strong);box-shadow:var(--shadow-sm)}
+details summary{cursor:pointer;font-weight:600;color:var(--text);font-size:.94rem;list-style:none;
+  display:flex;justify-content:space-between;align-items:center;gap:12px;user-select:none}
+details summary::-webkit-details-marker{display:none}
+details summary::after{content:'+';font-size:1.2rem;color:var(--text-subtle);
+  transition:transform .25s;flex-shrink:0;font-weight:400}
+details[open] summary::after{transform:rotate(45deg);color:var(--primary)}
+details p{margin:14px 0 0;font-size:.9rem;color:var(--text-muted);line-height:1.7}
+
+/* ---------- Footer ---------- */
+.site-footer{border-top:1px solid var(--border);background:var(--bg-subtle);padding:56px 0 36px}
+.footer-grid{display:grid;grid-template-columns:2.5fr 1fr 1fr;gap:48px;margin-bottom:48px}
+.footer-brand p{font-size:.86rem;color:var(--text-muted);margin-top:14px;max-width:38ch}
+.footer-col h4{font-size:.74rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;
+  color:var(--text-subtle);margin-bottom:14px}
+.footer-col a{display:block;font-size:.86rem;color:var(--text-muted);padding:5px 0;transition:color .15s}
+.footer-col a:hover{color:var(--primary);text-decoration:none}
+.footer-bottom{border-top:1px solid var(--border);padding-top:28px;display:flex;
+  justify-content:space-between;gap:16px;flex-wrap:wrap;font-size:.8rem;color:var(--text-subtle)}
+@media (max-width:768px){ .footer-grid{grid-template-columns:1fr;gap:32px} }
+
+/* ---------- Lightbox ---------- */
+.lightbox{position:fixed;inset:0;z-index:200;background:rgba(7,7,12,.94);
+  backdrop-filter:blur(12px);display:flex;align-items:center;justify-content:center;
+  padding:24px;animation:fadeIn .25s ease both}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.lightbox[hidden]{display:none}
+.lightbox-content{max-width:90vw;max-height:80vh;display:flex;align-items:center;justify-content:center;
+  transition:transform .2s}
+.lightbox-content canvas{max-width:100%;max-height:80vh;border-radius:var(--radius-md);
+  box-shadow:var(--shadow-xl)}
+.lightbox-close{position:absolute;top:20px;right:24px;width:46px;height:46px;
+  border-radius:50%;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);
+  color:#fff;font-size:1.5rem;display:grid;place-items:center;transition:all .15s;
+  backdrop-filter:blur(8px)}
+.lightbox-close:hover{background:rgba(255,255,255,.22)}
+.lightbox-controls{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);
+  display:flex;gap:6px;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
+  border-radius:999px;padding:6px;backdrop-filter:blur(16px)}
+.lightbox-controls button{background:transparent;border:none;color:#fff;
+  padding:9px 16px;border-radius:999px;font-size:.8rem;font-weight:500;transition:background .15s}
+.lightbox-controls button:hover{background:rgba(255,255,255,.14)}
+.lightbox-nav{position:absolute;top:50%;transform:translateY(-50%);width:48px;height:48px;
+  border-radius:50%;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
+  color:#fff;font-size:1.2rem;display:grid;place-items:center;transition:all .15s;
+  backdrop-filter:blur(8px)}
+.lightbox-nav:hover{background:rgba(255,255,255,.18)}
+.lightbox-nav.prev{left:20px}
+.lightbox-nav.next{right:20px}
+.lightbox-nav[hidden]{display:none}
+.lightbox-zoom{position:absolute;top:20px;left:24px;display:flex;gap:4px;
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.12);
+  border-radius:999px;padding:4px;backdrop-filter:blur(8px)}
+.lightbox-zoom button{background:transparent;border:none;color:#fff;width:34px;height:34px;
+  border-radius:50%;font-size:1rem;display:grid;place-items:center;transition:background .15s}
+.lightbox-zoom button:hover{background:rgba(255,255,255,.14)}
+
+/* ---------- Shortcuts modal ---------- */
+.modal{position:fixed;inset:0;z-index:210;background:rgba(7,7,12,.8);
+  backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;padding:24px}
+.modal[hidden]{display:none}
+.modal-card{background:var(--bg-elevated);border:1px solid var(--border);
+  border-radius:var(--radius-xl);box-shadow:var(--shadow-xl);max-width:480px;width:100%;
+  padding:32px;animation:resultIn .25s ease both}
+.modal-card h3{margin-bottom:20px}
+.shortcut-list{display:flex;flex-direction:column;gap:10px}
+.shortcut-row{display:flex;justify-content:space-between;align-items:center;font-size:.86rem;
+  color:var(--text-muted)}
+.shortcut-keys{display:flex;gap:4px}
+kbd{display:inline-block;padding:3px 8px;border-radius:5px;background:var(--bg-subtle);
+  border:1px solid var(--border-strong);font-family:var(--font-body);font-size:.72rem;
+  font-weight:600;color:var(--text)}
+
+/* ---------- Reveal ---------- */
+.reveal{opacity:0;transform:translateY(24px);transition:opacity .7s cubic-bezier(.4,0,.2,1),
+  transform .7s cubic-bezier(.4,0,.2,1)}
+.reveal.in{opacity:1;transform:translateY(0)}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+  .reveal{opacity:1;transform:none}
+}
+</style>
+</head>
+<body>
+
+<!-- ============================================================
+     HEADER
+     ============================================================ -->
+<header class="site-header">
+  <div class="container header-inner">
+    <a href="#" class="logo" aria-label="Image to PDF Converter home">
+      <span class="logo-mark">P</span>
+      <span>Image to PDF</span>
+    </a>
+    <nav class="nav" aria-label="Primary">
+      <a href="#tool">Converter</a>
+      <a href="#features">Features</a>
+      <a href="#how-to">How it works</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+    <div class="header-actions">
+      <button class="btn-icon" id="shortcutsBtn" type="button" aria-label="Keyboard shortcuts" title="Keyboard shortcuts (?)">⌘</button>
+      <button class="btn-icon" id="themeBtn" type="button" aria-label="Toggle theme" title="Toggle theme">☀️</button>
+      <a href="#tool" class="btn btn-primary btn-sm">Start Converting</a>
+    </div>
+  </div>
+</header>
+
+<!-- ============================================================
+     HERO
+     ============================================================ -->
+<section class="hero">
+  <div class="container">
+    <span class="eyebrow">100% in-browser · no uploads · no accounts</span>
+    <h1>Turn images into<br><span class="em-display">polished PDFs.</span></h1>
+    <p class="hero-sub">
+      Combine, reorder, filter and export JPG, PNG, WebP, GIF and BMP images into a clean,
+      print-ready PDF — with watermarks, headers, footers and page numbers. Everything happens
+      inside your browser. Your files never leave your device.
+    </p>
+    <div class="hero-cta">
+      <a href="#tool" class="btn btn-primary btn-lg">Start converting →</a>
+      <a href="#how-to" class="btn btn-ghost btn-lg">See how it works</a>
+    </div>
+    <div class="hero-stats">
+      <div><strong>0</strong><span>Files uploaded</span></div>
+      <div><strong>100%</strong><span>Client-side</span></div>
+      <div><strong>Free</strong><span>Unlimited use</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- AD SLOT: TOP -->
+<div class="ad-wrap">
+  <aside class="ad-slot ad-slot--leader" id="ad-slot-top" aria-label="Advertisement">
+    <div class="ad-slot__inner" id="ad-slot-top-inner">
+      <!-- PASTE ADSTERRA AD SCRIPT HERE -->
+    </div>
+  </aside>
+</div>
+
+<!-- ============================================================
+     TOOL
+     ============================================================ -->
+<section class="tool-section" id="tool">
+  <div class="container">
+    <div class="tool-card">
+      <div class="tool-header">
+        <h2>Build your PDF</h2>
+        <p>Drop your images below, arrange the pages, and export. Everything runs locally in your browser.</p>
+      </div>
+      <div class="tool-body">
+
+        <!-- Upload -->
+        <div class="upload-zone" id="uploadZone" role="button" tabindex="0" aria-label="Upload images">
+          <div class="upload-icon">↑</div>
+          <h3>Drop images here</h3>
+          <p>or <strong>click to browse</strong> your files</p>
+          <div class="upload-formats">
+            <span class="format-badge">JPG</span>
+            <span class="format-badge">PNG</span>
+            <span class="format-badge">WebP</span>
+            <span class="format-badge">GIF</span>
+            <span class="format-badge">BMP</span>
+          </div>
+          <p class="upload-hint">Multiple files supported · No file size limit</p>
+          <input type="file" id="fileInput" accept="image/*" multiple hidden>
+        </div>
+
+        <!-- Pages -->
+        <div class="pages-area" id="pagesArea" hidden>
+          <div class="batch-toolbar">
+            <div class="batch-left">
+              <label class="select-all">
+                <input type="checkbox" id="selectAllChk">
+                <span>Select all</span>
+              </label>
+              <span class="page-count" id="pageCount"><strong>0</strong> pages</span>
+            </div>
+            <div class="batch-right">
+              <button class="btn btn-ghost btn-sm" id="addMoreBtn" type="button">+ Add more</button>
+              <button class="btn btn-ghost btn-sm" id="reverseBtn" type="button">Reverse</button>
+              <button class="btn btn-ghost btn-sm" id="sortBtn" type="button">Sort A–Z</button>
+              <button class="btn btn-danger btn-sm" id="deleteSelectedBtn" type="button" hidden>Delete</button>
+            </div>
+          </div>
+          <div class="pages-grid" id="pagesGrid"></div>
+
+          <!-- Settings -->
+          <div class="settings-panel">
+            <div class="settings-group">
+              <h3>Layout</h3>
+              <div class="settings-grid">
+                <div class="field">
+                  <label for="sizeSel">Page size</label>
+                  <select id="sizeSel">
+                    <option value="a4">A4 (210 × 297 mm)</option>
+                    <option value="letter">Letter (8.5 × 11 in)</option>
+                    <option value="legal">Legal (8.5 × 14 in)</option>
+                    <option value="fit">Fit to image</option>
+                    <option value="custom">Custom size…</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="orientSel">Orientation</label>
+                  <select id="orientSel">
+                    <option value="portrait">Portrait</option>
+                    <option value="landscape">Landscape</option>
+                  </select>
+                </div>
+                <div class="field">
+                  <label for="marginSel">Margins</label>
+                  <select id="marginSel">
+                    <option value="none">None</option>
+                    <option value="small" selected>Small (5 mm)</option>
+                    <option value="medium">Medium (10 mm)</option>
+                    <option value="large">Large (20 mm)</option>
+                  </select>
+                </div>
+                <div class="custom-size" id="customSizeWrap" hidden>
+                  <div class="field">
+                    <label for="customW">Width (mm)</label>
+                    <input type="number" id="customW" min="50" max="1000" value="210">
+                  </div>
+                  <div class="field">
+                    <label for="customH">Height (mm)</label>
+                    <input type="number" id="customH" min="50" max="1000" value="297">
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div class="settings-group">
+              <h3>Quality</h3>
+              <div class="quality-presets" id="qualityPresets">
+                <button type="button" data-q="0.5">Small</button>
+                <button type="button" data-q="0.75">Balanced</button>
+                <button type="button" data-q="0.9" class="active">High</button>
+                <button type="button" data-q="1">Maximum</button>
+              </div>
+              <input type="range" id="qualityRange" min="0.3" max="1" step="0.05" value="0.9"
+                     aria-label="Image quality">
+              <span class="hint" id="qualityLabel">90% — sharper, larger file</span>
+            </div>
+
+            <div class="settings-group">
+              <h3>Image filters</h3>
+              <div class="filter-row" id="filterRow">
+                <button type="button" data-filter="none" class="active">Original</button>
+                <button type="button" data-filter="grayscale">Grayscale</button>
+                <button type="button" data-filter="sepia">Sepia</button>
+                <button type="button" data-filter="brightness">Brighten</button>
+                <button type="button" data-filter="contrast">Contrast</button>
+              </div>
+            </div>
+
+            <details class="advanced">
+              <summary>Advanced options</summary>
+              <div class="settings-grid">
+                <div class="field">
+                  <label for="filenameInput">Output filename</label>
+                  <input type="text" id="filenameInput" value="images" placeholder="images" spellcheck="false">
+                </div>
+                <div class="field">
+                  <label for="titleInput">PDF title (metadata)</label>
+                  <input type="text" id="titleInput" placeholder="Optional" spellcheck="false">
+                </div>
+                <div class="field">
+                  <label for="authorInput">Author (metadata)</label>
+                  <input type="text" id="authorInput" placeholder="Optional" spellcheck="false">
+                </div>
+                <div class="field">
+                  <label for="watermarkInput">Watermark text</label>
+                  <input type="text" id="watermarkInput" placeholder="e.g. DRAFT" spellcheck="false">
+                </div>
+                <div class="field">
+                  <label for="headerInput">Header text</label>
+                  <input type="text" id="headerInput" placeholder="Optional" spellcheck="false">
+                </div>
+                <div class="field">
+                  <label for="footerInput">Footer text</label>
+                  <input type="text" id="footerInput" placeholder="Optional" spellcheck="false">
+                </div>
+                <div class="toggle-row">
+                  <input type="checkbox" id="pageNumbersChk" checked>
+                  <label for="pageNumbersChk">Add page numbers</label>
+                </div>
+                <div class="toggle-row">
+                  <input type="checkbox" id="bordersChk">
+                  <label for="bordersChk">Draw page border</label>
+                </div>
+              </div>
+            </details>
+          </div>
+
+          <!-- Action bar -->
+          <div class="action-bar">
+            <div class="action-info" id="actionInfo"></div>
+            <div class="action-buttons">
+              <button class="btn btn-ghost" id="clearBtn" type="button">Clear all</button>
+              <button class="btn btn-primary btn-lg" id="convertBtn" type="button">
+                Convert to PDF
+              </button>
+            </div>
+          </div>
+
+          <!-- Progress -->
+          <div class="progress-panel" id="progressPanel" hidden>
+            <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+            <p class="progress-text" id="progressText">Preparing…</p>
+          </div>
+
+          <!-- Result -->
+          <div class="result-panel" id="resultPanel" hidden>
+            <div class="result-icon">✓</div>
+            <div class="result-info">
+              <strong id="resultTitle">PDF ready</strong>
+              <span id="resultMeta"></span>
+            </div>
+            <div class="result-actions">
+              <button class="btn btn-primary" id="downloadBtn" type="button">Download</button>
+              <button class="btn btn-ghost" id="previewBtn" type="button">Preview</button>
+              <button class="btn btn-ghost" id="shareBtn" type="button" hidden>Share</button>
+              <button class="btn btn-ghost" id="printBtn" type="button">Print</button>
+              <button class="btn btn-ghost" id="startOverBtn" type="button">Start over</button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- AD SLOT: MID-ACTION -->
+    <div style="margin-top:28px">
+      <aside class="ad-slot ad-slot--rect" id="ad-slot-mid-action" aria-label="Advertisement">
+        <div class="ad-slot__inner" id="ad-slot-mid-action-inner">
+          <!-- PASTE ADSTERRA AD SCRIPT HERE -->
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     FEATURES
+     ============================================================ -->
+<section class="features-section" id="features">
+  <div class="container">
+    <h2>Built for the way you actually work</h2>
+    <p>Every control you need to turn a messy folder of images into a polished, printable document.</p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <h3>Privacy first</h3>
+        <p>All conversion runs locally in your browser. Your images never touch a server — no uploads, no logs, no waiting.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h6v6H4z"/><path d="M14 4h6v6h-6z"/><path d="M4 14h6v6H4z"/><path d="M14 14h6v6h-6z"/></svg>
+        </div>
+        <h3>Batch processing</h3>
+        <p>Drop dozens of images at once and manage them all in a single grid. Rearrange, rotate, and trim in seconds.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v6"/><path d="m8 4 4 4 4-4"/><path d="M3 12h18"/><path d="M3 18h18"/></svg>
+        </div>
+        <h3>Full page control</h3>
+        <p>Reorder by drag or keyboard, rotate any page, duplicate a copy, or remove unwanted images before export.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9V5a2 2 0 0 1 2-2h4"/><path d="M21 9V5a2 2 0 0 0-2-2h-4"/><path d="M3 15v4a2 2 0 0 0 2 2h4"/><path d="M21 15v4a2 2 0 0 1-2 2h-4"/></svg>
+        </div>
+        <h3>Custom layouts</h3>
+        <p>A4, Letter, Legal, Fit-to-image, or a custom size. Portrait or landscape — with precise margins.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20V10l4-4 4 4v10"/><path d="M14 20V6l4-2 4 2v14"/></svg>
+        </div>
+        <h3>Smart compression</h3>
+        <p>Balance sharpness and file size with presets or a precise quality slider. Great for emailing and printing.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+        </div>
+        <h3>Preview &amp; export</h3>
+        <p>See a live preview before you save. Review page count and file size, then download with one click.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="13.5" cy="6.5" r="2.5"/><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/></svg>
+        </div>
+        <h3>Watermarks &amp; metadata</h3>
+        <p>Add a diagonal watermark, header, footer and page numbers. Set the PDF title and author for a professional finish.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v4"/><path d="m16.2 7.8 2.9-2.9"/><path d="M18 12h4"/><path d="m16.2 16.2 2.9 2.9"/><path d="M12 18v4"/><path d="m4.9 19.1 2.9-2.9"/><path d="M2 12h4"/><path d="m4.9 4.9 2.9 2.9"/></svg>
+        </div>
+        <h3>Image filters</h3>
+        <p>Apply grayscale, sepia, brightness or contrast to every page before export — perfect for scanned documents.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     CONTENT ARTICLE
+     ============================================================ -->
+<article class="content-article">
+  <div class="container-narrow">
+    <nav class="toc" aria-label="Sections">
+      <a href="#how-to">How to convert</a>
+      <a href="#formats">Formats</a>
+      <a href="#page-management">Page management</a>
+      <a href="#layout">Layout</a>
+      <a href="#export">Quality &amp; export</a>
+      <a href="#privacy">Privacy</a>
+      <a href="#best-practices">Scanning tips</a>
+      <a href="#troubleshooting">Troubleshooting</a>
+      <a href="#faq">FAQ</a>
+    </nav>
+
+    <section id="what-it-does">
+      <h2>What this Image to PDF Converter does</h2>
+      <p>
+        An image-to-PDF workflow takes picture files such as JPG, PNG, or WebP and places them onto PDF pages.
+        The PDF format is useful because it keeps pages in a fixed layout, which makes it suitable for receipts,
+        assignments, scanned forms, photo collections, presentations, and document archives. This converter gives
+        you control over page order, page orientation, margins, filters, watermarks, and image quality before you
+        export.
+      </p>
+      <p>
+        The main benefit is convenience. You can upload multiple images, review them as pages, remove anything
+        unwanted, rotate a sideways scan, apply a grayscale filter to a mixed batch, and then download a single
+        document. The tool is focused on image-to-PDF conversion. It does not perform OCR or create editable text.
+      </p>
+    </section>
+
+    <section id="how-to">
+      <h2>How to convert images to PDF</h2>
+      <ol>
+        <li><strong>Add your images.</strong> Use the upload area at the top of this page — click it or drag files
+          onto it. JPG, PNG, WebP, GIF and BMP are supported.</li>
+        <li><strong>Review the page grid.</strong> Check that every image appears in the order you want. Drag any
+          card to reorder — or use the sort and reverse buttons in the toolbar.</li>
+        <li><strong>Fix orientation and unwanted pages.</strong> Rotate individual pages left or right in 90°
+          steps. Duplicate a page when needed. Remove pages with a single click.</li>
+        <li><strong>Choose layout settings.</strong> Pick A4, Letter, Legal, Fit to Image, or a custom size. Then
+          choose Portrait or Landscape, and set the margins.</li>
+        <li><strong>Apply filters and finishing touches.</strong> Use the image filter buttons for grayscale,
+          sepia, brightness or contrast. Open Advanced options to add a watermark, header, footer and page
+          numbers.</li>
+        <li><strong>Adjust quality.</strong> Use a preset or the precision slider to balance file size and
+          sharpness.</li>
+        <li><strong>Convert and download.</strong> Press <em>Convert to PDF</em>. When it finishes you can
+          preview the file, download it, share it, print it, or start over.</li>
+      </ol>
+      <div class="note">
+        <p><strong>Privacy note:</strong> every image is processed locally in your browser using the Canvas API.
+          Files are never uploaded. For extra confidence, disconnect from the internet after loading the page —
+          conversion still works.</p>
+      </div>
+    </section>
+
+    <section id="formats">
+      <h2>Supported image formats and practical tips</h2>
+      <p>
+        The uploader accepts JPG, JPEG, PNG, WebP, GIF, and BMP — plus any other format your browser can decode.
+        JPG files are often smaller and work well for photos. PNG files are useful for screenshots, diagrams, and
+        images with transparency, though they tend to be larger. WebP files are common on the web and offer strong
+        compression, but some older workflows may not open them as easily.
+      </p>
+      <p>
+        For the best results, use clear source images. A sharp, well-lit photo will usually produce a more readable
+        PDF than a blurry or heavily compressed one. If you are converting text-heavy scans, make sure the text is
+        straight and large enough to read. If an image is extremely large, consider resizing it before upload if
+        the tool slows down or the output file becomes too heavy.
+      </p>
+    </section>
+
+    <section id="page-management">
+      <h2>Page management before export</h2>
+      <p>
+        Page management is one of the most useful parts of an image-to-PDF workflow. A batch of photos rarely
+        arrives in perfect order, and scans often need small corrections. Use the toolbar to sort by name, reverse
+        the order, or drag any card to move it. Hover any page to rotate it left or right, duplicate it, or remove
+        it. Select multiple pages with the checkboxes and use the batch delete button to fix them all at once.
+      </p>
+      <p>
+        Review the page grid carefully before downloading. Check for missing pages, accidental duplicates, and
+        pages that are rotated the wrong way. If you are creating a document for printing, confirm the first page
+        is the cover or first page you expect. If you are assembling a photo collection, keep related images
+        together so the final PDF reads naturally.
+      </p>
+    </section>
+
+    <section id="layout">
+      <h2>Page size, orientation, margins, and scaling</h2>
+      <p>
+        Layout settings affect how each image sits on the PDF page. Common page sizes include A4, Letter, Legal,
+        and Fit to Image. A4 and Letter are standard document sizes for many offices and schools. Legal is longer
+        and may suit certain forms or contracts. Fit to Image is useful when you want the PDF page to follow the
+        image dimensions rather than forcing a standard paper size. Custom size is there when you need an exact
+        width and height in millimetres.
+      </p>
+      <p>
+        Orientation matters too. Portrait is usually best for documents, letters, and vertical photos. Landscape
+        works better for wide screenshots, spreadsheets, panoramic photos, and presentation slides. Margins can be
+        set to None, Small, Medium, or Large. No margins may look clean for full-page images, but small or medium
+        margins make printing safer because they reduce the risk of content being cut off by a printer's
+        non-printable area.
+      </p>
+      <p>
+        Images are fitted proportionally inside the printable area and centred on the page, so nothing is stretched
+        or cropped. Choose the page size that matches your goal: a consistent document layout, or a page that
+        follows each image's own shape.
+      </p>
+    </section>
+
+    <!-- AD SLOT: ARTICLE MID -->
+    <aside class="ad-slot ad-slot--rect" id="ad-slot-article-mid" aria-label="Advertisement">
+      <div class="ad-slot__inner" id="ad-slot-article-mid-inner">
+        <!-- PASTE ADSTERRA AD SCRIPT HERE -->
+      </div>
+    </aside>
+
+    <section id="export">
+      <h2>Quality, compression, and export options</h2>
+      <p>
+        Image quality and compression settings help balance file size and sharpness. Higher quality means a larger
+        PDF with clearer details, which is better for printing, signatures, receipts, and text-heavy scans.
+        Stronger compression can produce a smaller file that is easier to email or upload, but fine details may
+        become softer. Use the quality presets as a starting point, or slide the precision control to dial in
+        exactly what you need.
+      </p>
+      <p>
+        A custom output filename makes the final PDF easier to find later. Use a short, descriptive name such as
+        "receipts-march" or "assignment-pages". You can also set PDF metadata (title and author) from the Advanced
+        options panel. After export, confirm the download started correctly and that the PDF opens in your usual
+        viewer. Some browsers may block automatic downloads — if so, check your browser prompts and allow the site.
+      </p>
+    </section>
+
+    <section id="privacy">
+      <h2>Privacy and browser-based performance</h2>
+      <p>
+        This converter processes images locally in your browser using client-side conversion, which means files are
+        not uploaded to an external server. This is helpful for privacy because the image data stays on your device
+        during conversion. Actual behaviour depends on the live page implementation, so confirm the current privacy
+        behaviour before converting confidential documents, identity papers, or private photos.
+      </p>
+      <p>
+        Browser-based processing also means performance depends on your device. Large batches, high-resolution
+        scans, and many pages can use significant memory. If the page becomes slow, try converting fewer images at a
+        time, closing unused browser tabs, or reducing very large image files before upload.
+      </p>
+    </section>
+
+    <section id="best-practices">
+      <h2>Scanning and print best practices</h2>
+      <p>
+        Good source images make better PDFs. When scanning documents, keep pages straight, avoid shadows, and use
+        enough resolution to make small text readable. For photos, use even lighting and avoid excessive digital
+        zoom, which can make the image blurry. If you are photographing a document with a phone, hold the camera
+        parallel to the page and keep the entire page inside the frame.
+      </p>
+      <p>
+        For printing, choose a page size that matches your paper and leave a small margin if your printer cannot
+        print edge to edge. Preview the PDF before printing a large job. If the document will be shared online,
+        moderate compression is often enough; if it will be printed or archived, prioritise clarity over the
+        smallest possible file size.
+      </p>
+    </section>
+
+    <section id="troubleshooting">
+      <h2>Troubleshooting common problems</h2>
+
+      <h3>An image will not upload</h3>
+      <p>Check that the file is a supported image format and that it is not corrupted. Try opening the image in
+        another app first. If the format is unusual, convert it to JPG or PNG and upload again. Very large files
+        can also be rejected by the browser — try a smaller version.</p>
+
+      <h3>The page is slow or the browser runs out of memory</h3>
+      <p>Convert fewer images per batch, close other tabs, and avoid extremely large scans. If you have many
+        pages, split the job into two or three PDFs.</p>
+
+      <h3>The PDF looks blurry</h3>
+      <p>The source image may be low resolution, or the quality slider may be set too low. Use sharper source
+        images and raise the quality setting. Avoid zooming into a small image before saving it.</p>
+
+      <h3>The download does not start</h3>
+      <p>Check your browser's download or pop-up permissions. Look for a blocked-download icon in the address bar.
+        Try another browser or temporarily disable strict download blocking, then export again.</p>
+
+      <h3>Pages are rotated or out of order</h3>
+      <p>Use the page controls to rotate individual pages and drag cards to reorder them before export. Use the
+        sort and reverse buttons for quick bulk ordering.</p>
+
+      <h3>The watermark or header overlaps the image</h3>
+      <p>Watermarks are drawn behind the image by design, so they remain visible in blank areas. If the image
+        fills the entire page, the watermark may be hidden. Try adding margins or reducing the image scale.</p>
+    </section>
+
+    <section id="faq">
+      <h2>Frequently asked questions</h2>
+
+      <details><summary>Is the Image to PDF Converter free?</summary>
+        <p>Yes. This page is a free, browser-based tool. Check the live site for any changes to usage limits
+          before relying on it for very large or critical jobs.</p></details>
+
+      <details><summary>Which image formats can I convert to PDF?</summary>
+        <p>JPG, JPEG, PNG, WebP, GIF, and BMP — plus any format your browser can decode. If a file is rejected,
+          convert it to JPG or PNG and try again.</p></details>
+
+      <details><summary>Can I combine multiple images into one PDF?</summary>
+        <p>Yes — multi-image upload is a core part of the workflow. Add your images, arrange them as pages, and
+          export them together as a single PDF.</p></details>
+
+      <details><summary>Can I reorder or rotate pages before downloading?</summary>
+        <p>Yes. Drag cards to reorder, use the sort and reverse toolbar buttons, and hover any page to rotate,
+          duplicate, or delete it. You can also select multiple pages and edit them in bulk.</p></details>
+
+      <details><summary>What page sizes are supported?</summary>
+        <p>A4, Letter, Legal, Fit to Image, and Custom (in millimetres). Orientation and margins are also fully
+          customisable.</p></details>
+
+      <details><summary>How do I make the PDF smaller?</summary>
+        <p>Lower the quality slider or choose the "Small" preset. Lower values reduce file size while higher
+          values preserve detail. Test a few pages before exporting a large batch.</p></details>
+
+      <details><summary>Are my images uploaded to a server?</summary>
+        <p>No. Conversion runs entirely in your browser using the Canvas API and a PDF assembled locally in
+          memory. Images never leave your device.</p></details>
+
+      <details><summary>Can I add page numbers, a watermark, or a header?</summary>
+        <p>Yes — all are available in the Advanced options panel. Page numbers appear at the bottom of each page,
+          the watermark runs diagonally across each page, and the header and footer are drawn at the top and bottom
+          of every page.</p></details>
+
+      <details><summary>Does the tool extract text from images?</summary>
+        <p>No. The workflow is for image-to-PDF conversion only. It does not perform OCR or create editable
+          text.</p></details>
+
+      <details><summary>Can I use the converter on a phone?</summary>
+        <p>Yes — the page is responsive and works in modern mobile browsers. Large batches are more comfortable on
+          a desktop or laptop.</p></details>
+    </section>
+
+    <section id="conclusion">
+      <h2>Start converting your images</h2>
+      <p>
+        This Image to PDF Converter is a practical way to turn photos, screenshots, and scans into a single,
+        organised PDF. Upload your images, arrange the pages, choose the right page size and quality settings, and
+        download a file ready to print, share, or archive. For best results, use clear source images, review the
+        page grid, and confirm the live tool's behaviour before working with sensitive documents.
+      </p>
+      <p><a href="#tool">Scroll up to the converter</a> and create your PDF.</p>
+    </section>
+  </div>
+</article>
+
+<!-- AD SLOT: FOOTER TOP -->
+<div class="ad-wrap">
+  <aside class="ad-slot ad-slot--leader" id="ad-slot-footer-top" aria-label="Advertisement">
+    <div class="ad-slot__inner" id="ad-slot-footer-top-inner">
+      <!-- PASTE ADSTERRA AD SCRIPT HERE -->
+    </div>
+  </aside>
+</div>
+
+<!-- ============================================================
+     FOOTER
+     ============================================================ -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="logo">
+          <span class="logo-mark">P</span>
+          <span>Image to PDF</span>
+        </div>
+        <p>Ultra-premium, private, in-browser image-to-PDF conversion. No uploads, no accounts, no limits.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Product</h4>
+        <a href="#tool">Converter</a>
+        <a href="#features">Features</a>
+        <a href="#how-to">How it works</a>
+        <a href="#faq">FAQ</a>
+      </div>
+      <div class="footer-col">
+        <h4>Resources</h4>
+        <a href="#privacy">Privacy</a>
+        <a href="#best-practices">Scanning tips</a>
+        <a href="#troubleshooting">Troubleshooting</a>
+        <a href="#formats">Supported formats</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© Image to PDF Converter — all conversion happens on your device.</span>
+      <span>Built with care for privacy and speed.</span>
+    </div>
+  </div>
+</footer>
+
+<!-- ============================================================
+     LIGHTBOX
+     ============================================================ -->
+<div class="lightbox" id="lightbox" hidden role="dialog" aria-modal="true" aria-label="Page preview">
+  <button class="lightbox-close" id="lightboxClose" type="button" aria-label="Close preview">×</button>
+  <div class="lightbox-zoom">
+    <button type="button" data-zoom="out" aria-label="Zoom out">−</button>
+    <button type="button" data-zoom="reset" aria-label="Reset zoom">1:1</button>
+    <button type="button" data-zoom="in" aria-label="Zoom in">+</button>
+  </div>
+  <button class="lightbox-nav prev" id="lightboxPrev" type="button" aria-label="Previous page" hidden>‹</button>
+  <button class="lightbox-nav next" id="lightboxNext" type="button" aria-label="Next page" hidden>›</button>
+  <div class="lightbox-content" id="lightboxContent"></div>
+  <div class="lightbox-controls">
+    <button type="button" data-lb-action="rotL">↺ Rotate left</button>
+    <button type="button" data-lb-action="rotR">↻ Rotate right</button>
+    <button type="button" data-lb-action="delete">✕ Delete</button>
+  </div>
+</div>
+
+<!-- ============================================================
+     SHORTCUTS MODAL
+     ============================================================ -->
+<div class="modal" id="shortcutsModal" hidden role="dialog" aria-modal="true" aria-label="Keyboard shortcuts">
+  <div class="modal-card">
+    <h3>Keyboard shortcuts</h3>
+    <div class="shortcut-list">
+      <div class="shortcut-row"><span>Undo</span><span class="shortcut-keys"><kbd>Ctrl</kbd><kbd>Z</kbd></span></div>
+      <div class="shortcut-row"><span>Redo</span><span class="shortcut-keys"><kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>Z</kbd></span></div>
+      <div class="shortcut-row"><span>Select all pages</span><span class="shortcut-keys"><kbd>Ctrl</kbd><kbd>A</kbd></span></div>
+      <div class="shortcut-row"><span>Delete selected pages</span><span class="shortcut-keys"><kbd>Del</kbd></span></div>
+      <div class="shortcut-row"><span>Move page up / down</span><span class="shortcut-keys"><kbd>Alt</kbd><kbd>↑</kbd><kbd>↓</kbd></span></div>
+      <div class="shortcut-row"><span>Close lightbox</span><span class="shortcut-keys"><kbd>Esc</kbd></span></div>
+    </div>
+    <div style="margin-top:24px;text-align:right">
+      <button class="btn btn-ghost btn-sm" id="shortcutsClose" type="button">Close</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* =============================================================
+     1. STATE
+  ============================================================= */
+  var pages = [];           // { id, name, img, rotation, selected }
+  var uidCounter = 0;
+  var dragId = null;
+  var lightboxId = null;
+  var lightboxZoom = 1;
+  var lastPdfUrl = null;
+  var lastPdfBlob = null;
+  var lastPdfName = "";
+  var undoStack = [];
+  var redoStack = [];
+  var MAX_HISTORY = 40;
+
+  function uid() { return "p" + (++uidCounter) + "_" + Date.now().toString(36); }
+
+  /* =============================================================
+     2. ELEMENT REFS
+  ============================================================= */
+  var root        = document.documentElement;
+  var themeBtn    = document.getElementById("themeBtn");
+  var shortcutsBtn= document.getElementById("shortcutsBtn");
+  var shortcutsModal = document.getElementById("shortcutsModal");
+  var shortcutsClose = document.getElementById("shortcutsClose");
+  var uploadZone  = document.getElementById("uploadZone");
+  var fileInput   = document.getElementById("fileInput");
+  var pagesArea   = document.getElementById("pagesArea");
+  var pagesGrid   = document.getElementById("pagesGrid");
+  var pageCount   = document.getElementById("pageCount");
+  var selectAllChk= document.getElementById("selectAllChk");
+  var addMoreBtn  = document.getElementById("addMoreBtn");
+  var reverseBtn  = document.getElementById("reverseBtn");
+  var sortBtn     = document.getElementById("sortBtn");
+  var deleteSelectedBtn = document.getElementById("deleteSelectedBtn");
+  var sizeSel     = document.getElementById("sizeSel");
+  var orientSel   = document.getElementById("orientSel");
+  var marginSel   = document.getElementById("marginSel");
+  var customWrap  = document.getElementById("customSizeWrap");
+  var customW     = document.getElementById("customW");
+  var customH     = document.getElementById("customH");
+  var qualityRange= document.getElementById("qualityRange");
+  var qualityLbl  = document.getElementById("qualityLabel");
+  var qualityPresets = document.getElementById("qualityPresets");
+  var filterRow   = document.getElementById("filterRow");
+  var filenameIn  = document.getElementById("filenameInput");
+  var titleIn     = document.getElementById("titleInput");
+  var authorIn    = document.getElementById("authorInput");
+  var watermarkIn = document.getElementById("watermarkInput");
+  var headerIn    = document.getElementById("headerInput");
+  var footerIn    = document.getElementById("footerInput");
+  var pageNumsChk = document.getElementById("pageNumbersChk");
+  var bordersChk  = document.getElementById("bordersChk");
+  var actionInfo  = document.getElementById("actionInfo");
+  var convertBtn  = document.getElementById("convertBtn");
+  var clearBtn    = document.getElementById("clearBtn");
+  var progressPanel = document.getElementById("progressPanel");
+  var progressFill  = document.getElementById("progressFill");
+  var progressText  = document.getElementById("progressText");
+  var resultPanel = document.getElementById("resultPanel");
+  var resultTitle = document.getElementById("resultTitle");
+  var resultMeta  = document.getElementById("resultMeta");
+  var downloadBtn = document.getElementById("downloadBtn");
+  var previewBtn  = document.getElementById("previewBtn");
+  var shareBtn    = document.getElementById("shareBtn");
+  var printBtn    = document.getElementById("printBtn");
+  var startOverBtn= document.getElementById("startOverBtn");
+  var lightbox    = document.getElementById("lightbox");
+  var lightboxContent = document.getElementById("lightboxContent");
+  var lightboxClose   = document.getElementById("lightboxClose");
+  var lightboxPrev    = document.getElementById("lightboxPrev");
+  var lightboxNext    = document.getElementById("lightboxNext");
+
+  /* =============================================================
+     3. CONSTANTS
+  ============================================================= */
+  var SIZES_MM = { a4: [210, 297], letter: [215.9, 279.4], legal: [215.9, 355.6] };
+  var MARGINS_MM = { none: 0, small: 5, medium: 10, large: 20 };
+  var MM_TO_PT = 72 / 25.4;
+  var MAX_SIDE_PX = 2500;
+  var currentFilter = "none";
+
+  /* =============================================================
+     4. THEME
+  ============================================================= */
+  function applyTheme(t) {
+    root.setAttribute("data-theme", t);
+    themeBtn.textContent = t === "dark" ? "☀️" : "🌙";
+    try { localStorage.setItem("i2pdf-theme", t); } catch (e) {}
+  }
+  var savedTheme = "dark";
+  try { savedTheme = localStorage.getItem("i2pdf-theme") || "dark"; } catch (e) {}
+  applyTheme(savedTheme);
+  themeBtn.addEventListener("click", function () {
+    applyTheme(root.getAttribute("data-theme") === "dark" ? "light" : "dark");
+  });
+
+  /* =============================================================
+     5. SETTINGS PERSISTENCE
+  ============================================================= */
+  var SETTINGS_KEY = "i2pdf-settings-v2";
+  function saveSettings() {
+    var s = {
+      size: sizeSel.value, orient: orientSel.value, margin: marginSel.value,
+      quality: qualityRange.value, filename: filenameIn.value,
+      title: titleIn.value, author: authorIn.value,
+      watermark: watermarkIn.value, header: headerIn.value, footer: footerIn.value,
+      pageNumbers: pageNumsChk.checked, borders: bordersChk.checked,
+      customW: customW.value, customH: customH.value, filter: currentFilter
+    };
+    try { localStorage.setItem(SETTINGS_KEY, JSON.stringify(s)); } catch (e) {}
+  }
+  function loadSettings() {
+    var raw;
+    try { raw = localStorage.getItem(SETTINGS_KEY); } catch (e) {}
+    if (!raw) return;
+    try {
+      var s = JSON.parse(raw);
+      if (s.size) sizeSel.value = s.size;
+      if (s.orient) orientSel.value = s.orient;
+      if (s.margin) marginSel.value = s.margin;
+      if (s.quality) qualityRange.value = s.quality;
+      if (s.filename) filenameIn.value = s.filename;
+      if (s.title) titleIn.value = s.title;
+      if (s.author) authorIn.value = s.author;
+      if (s.watermark) watermarkIn.value = s.watermark;
+      if (s.header) headerIn.value = s.header;
+      if (s.footer) footerIn.value = s.footer;
+      if (typeof s.pageNumbers === "boolean") pageNumsChk.checked = s.pageNumbers;
+      if (typeof s.borders === "boolean") bordersChk.checked = s.borders;
+      if (s.customW) customW.value = s.customW;
+      if (s.customH) customH.value = s.customH;
+      if (s.filter) {
+        currentFilter = s.filter;
+        filterRow.querySelectorAll("button").forEach(function (b) {
+          b.classList.toggle("active", b.dataset.filter === currentFilter);
+        });
+      }
+    } catch (e) {}
+  }
+  loadSettings();
+
+  [sizeSel, orientSel, marginSel, qualityRange, filenameIn, titleIn, authorIn,
+    watermarkIn, headerIn, footerIn, pageNumsChk, bordersChk, customW, customH].forEach(function (el) {
+    el.addEventListener("change", saveSettings);
+    el.addEventListener("input", saveSettings);
+  });
+
+  /* =============================================================
+     6. HELPERS
+  ============================================================= */
+  function setQualityUI(v) {
+    var pct = Math.round(v * 100);
+    var label = pct + "%";
+    if (v >= 0.95) label += " — maximum sharpness";
+    else if (v >= 0.85) label += " — high quality";
+    else if (v >= 0.65) label += " — balanced";
+    else if (v >= 0.45) label += " — smaller file";
+    else label += " — smallest file";
+    qualityLbl.textContent = label;
+    qualityPresets.querySelectorAll("button").forEach(function (b) {
+      b.classList.toggle("active", Math.abs(parseFloat(b.dataset.q) - v) < 0.03);
+    });
+  }
+  setQualityUI(parseFloat(qualityRange.value));
+
+  qualityRange.addEventListener("input", function () {
+    setQualityUI(parseFloat(qualityRange.value));
+  });
+  qualityPresets.addEventListener("click", function (e) {
+    var btn = e.target.closest("button[data-q]");
+    if (!btn) return;
+    qualityRange.value = btn.dataset.q;
+    setQualityUI(parseFloat(btn.dataset.q));
+    saveSettings();
+  });
+
+  filterRow.addEventListener("click", function (e) {
+    var btn = e.target.closest("button[data-filter]");
+    if (!btn) return;
+    currentFilter = btn.dataset.filter;
+    filterRow.querySelectorAll("button").forEach(function (b) {
+      b.classList.toggle("active", b === btn);
+    });
+    saveSettings();
+    render();
+  });
+
+  sizeSel.addEventListener("change", function () {
+    customWrap.hidden = sizeSel.value !== "custom";
+  });
+  if (sizeSel.value === "custom") customWrap.hidden = false;
+
+  function updatePageCount() {
+    var selected = pages.filter(function (p) { return p.selected; }).length;
+    var html = "<strong>" + pages.length + "</strong> page" + (pages.length === 1 ? "" : "s");
+    if (selected) html += " · <strong>" + selected + "</strong> selected";
+    pageCount.innerHTML = html;
+
+    if (selected) {
+      deleteSelectedBtn.hidden = false;
+      deleteSelectedBtn.textContent = "Delete " + selected;
+    } else {
+      deleteSelectedBtn.hidden = true;
+    }
+    selectAllChk.checked = pages.length > 0 && selected === pages.length;
+    selectAllChk.indeterminate = selected > 0 && selected < pages.length;
+  }
+
+  function updateActionInfo() {
+    if (!pages.length) { actionInfo.innerHTML = ""; return; }
+    var selected = pages.filter(function (p) { return p.selected; }).length;
+    var suffix = selected ? " · " + selected + " selected" : "";
+    actionInfo.innerHTML = "<strong>" + pages.length + "</strong> page" +
+      (pages.length === 1 ? "" : "s") + suffix;
+  }
+
+  /* =============================================================
+     7. HISTORY (undo / redo)
+  ============================================================= */
+  function snapshot() {
+    return pages.map(function (p) {
+      return { id: p.id, name: p.name, img: p.img, rotation: p.rotation, selected: false };
+    });
+  }
+  function pushHistory() {
+    undoStack.push(snapshot());
+    if (undoStack.length > MAX_HISTORY) undoStack.shift();
+    redoStack = [];
+  }
+  function restore(state) {
+    pages = state.map(function (p) {
+      return { id: p.id, name: p.name, img: p.img, rotation: p.rotation, selected: false };
+    });
+    render();
+  }
+  function undo() {
+    if (!undoStack.length) return;
+    redoStack.push(snapshot());
+    restore(undoStack.pop());
+  }
+  function redo() {
+    if (!redoStack.length) return;
+    undoStack.push(snapshot());
+    restore(redoStack.pop());
+  }
+
+  /* =============================================================
+     8. FILE LOADING
+  ============================================================= */
+  function loadImageEl(url) {
+    return new Promise(function (resolve, reject) {
+      var img = new Image();
+      img.onload = function () { resolve(img); };
+      img.onerror = function () { reject(new Error("decode failed")); };
+      img.src = url;
+    });
+  }
+
+  function addFiles(fileList) {
+    var files = Array.prototype.slice.call(fileList).filter(function (f) {
+      return f.type && f.type.indexOf("image/") === 0;
+    });
+    if (!files.length) return;
+
+    pushHistory();
+    var added = 0, failed = 0;
+    var chain = Promise.resolve();
+
+    files.forEach(function (file) {
+      chain = chain.then(function () {
+        var url = URL.createObjectURL(file);
+        return loadImageEl(url).then(function (img) {
+          pages.push({
+            id: uid(), name: file.name, img: img,
+            rotation: 0, selected: false
+          });
+          added++;
+        }).catch(function () {
+          URL.revokeObjectURL(url);
+          failed++;
+        });
+      });
+    });
+
+    chain.then(function () {
+      render();
+      if (failed) console.warn(failed + " file(s) could not be read.");
+    });
+  }
+
+  fileInput.addEventListener("change", function (e) {
+    addFiles(e.target.files);
+    fileInput.value = "";
+  });
+
+  uploadZone.addEventListener("click", function () { fileInput.click(); });
+  uploadZone.addEventListener("keydown", function (e) {
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); fileInput.click(); }
+  });
+  ["dragenter", "dragover"].forEach(function (ev) {
+    uploadZone.addEventListener(ev, function (e) {
+      e.preventDefault(); uploadZone.classList.add("over");
+    });
+  });
+  ["dragleave", "drop"].forEach(function (ev) {
+    uploadZone.addEventListener(ev, function (e) {
+      e.preventDefault(); uploadZone.classList.remove("over");
+    });
+  });
+  uploadZone.addEventListener("drop", function (e) {
+    if (e.dataTransfer && e.dataTransfer.files) addFiles(e.dataTransfer.files);
+  });
+  addMoreBtn.addEventListener("click", function () { fileInput.click(); });
+
+  /* =============================================================
+     9. THUMBNAILS & RENDERING
+  ============================================================= */
+  function applyFilterToContext(ctx, filter) {
+    if (filter === "none") return;
+    if (filter === "grayscale") ctx.filter = "grayscale(1)";
+    else if (filter === "sepia") ctx.filter = "sepia(1)";
+    else if (filter === "brightness") ctx.filter = "brightness(1.25)";
+    else if (filter === "contrast") ctx.filter = "contrast(1.3)";
+  }
+
+  function drawThumb(canvas, page) {
+    var W = 300, H = 400;
+    canvas.width = W; canvas.height = H;
+    var ctx = canvas.getContext("2d");
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, W, H);
+
+    var r = ((page.rotation % 360) + 360) % 360;
+    var swap = (r === 90 || r === 270);
+    var iw = page.img.naturalWidth, ih = page.img.naturalHeight;
+    if (!iw || !ih) return;
+
+    var srcW = swap ? ih : iw;
+    var srcH = swap ? iw : ih;
+    var pad = 12;
+    var scale = Math.min((W - pad) / srcW, (H - pad) / srcH);
+    var dw = iw * scale, dh = ih * scale;
+
+    ctx.save();
+    ctx.translate(W / 2, H / 2);
+    ctx.rotate(r * Math.PI / 180);
+    applyFilterToContext(ctx, currentFilter);
+    ctx.drawImage(page.img, -dw / 2, -dh / 2, dw, dh);
+    ctx.restore();
+  }
+
+  function makeBtn(action, label, title, danger) {
+    var b = document.createElement("button");
+    b.type = "button";
+    b.className = "page-action" + (danger ? " danger" : "");
+    b.dataset.action = action;
+    b.textContent = label;
+    b.title = title;
+    b.setAttribute("aria-label", title);
+    return b;
+  }
+
+  function render() {
+    pagesGrid.innerHTML = "";
+    var hasPages = pages.length > 0;
+    pagesArea.hidden = !hasPages;
+    uploadZone.hidden = hasPages;
+
+    if (!hasPages) return;
+
+    pages.forEach(function (p, i) {
+      var card = document.createElement("article");
+      card.className = "page-card" + (p.selected ? " selected" : "");
+      card.dataset.id = p.id;
+      card.draggable = true;
+      card.tabIndex = 0;
+
+      var preview = document.createElement("div");
+      preview.className = "page-preview";
+
+      var cv = document.createElement("canvas");
+      preview.appendChild(cv);
+      drawThumb(cv, p);
+
+      var badge = document.createElement("span");
+      badge.className = "page-badge";
+      badge.textContent = (i + 1);
+
+      var checkLabel = document.createElement("label");
+      checkLabel.className = "page-check";
+      checkLabel.title = "Select page";
+      var chk = document.createElement("input");
+      chk.type = "checkbox";
+      chk.checked = !!p.selected;
+      chk.addEventListener("change", function (e) {
+        e.stopPropagation();
+        p.selected = chk.checked;
+        card.classList.toggle("selected", p.selected);
+        updatePageCount();
+        updateActionInfo();
+      });
+      checkLabel.appendChild(chk);
+
+      var actions = document.createElement("div");
+      actions.className = "page-actions";
+      actions.appendChild(makeBtn("rotL", "↺", "Rotate left"));
+      actions.appendChild(makeBtn("rotR", "↻", "Rotate right"));
+      actions.appendChild(makeBtn("dup", "⧉", "Duplicate"));
+      actions.appendChild(makeBtn("del", "✕", "Delete", true));
+
+      preview.appendChild(badge);
+      preview.appendChild(checkLabel);
+      preview.appendChild(actions);
+
+      preview.addEventListener("click", function (e) {
+        if (e.target.closest(".page-check, .page-actions")) return;
+        openLightbox(p.id);
+      });
+
+      var info = document.createElement("div");
+      info.className = "page-info";
+      var nm = document.createElement("span");
+      nm.className = "page-name";
+      nm.textContent = p.name;
+      nm.title = p.name;
+      var meta = document.createElement("span");
+      meta.className = "page-meta";
+      var r = ((p.rotation % 360) + 360) % 360;
+      meta.textContent = p.img.naturalWidth + " × " + p.img.naturalHeight + " · " + r + "°";
+      info.appendChild(nm);
+      info.appendChild(meta);
+
+      card.appendChild(preview);
+      card.appendChild(info);
+
+      /* drag reorder */
+      card.addEventListener("dragstart", function (e) {
+        dragId = p.id;
+        card.classList.add("dragging");
+        try { e.dataTransfer.setData("text/plain", p.id); } catch (err) {}
+        e.dataTransfer.effectAllowed = "move";
+      });
+      card.addEventListener("dragend", function () {
+        dragId = null;
+        card.classList.remove("dragging");
+        document.querySelectorAll(".drag-over").forEach(function (el) {
+          el.classList.remove("drag-over");
+        });
+      });
+      card.addEventListener("dragover", function (e) {
+        e.preventDefault();
+        if (dragId && dragId !== p.id) card.classList.add("drag-over");
+      });
+      card.addEventListener("dragleave", function () {
+        card.classList.remove("drag-over");
+      });
+      card.addEventListener("drop", function (e) {
+        e.preventDefault();
+        card.classList.remove("drag-over");
+        if (!dragId || dragId === p.id) return;
+        var from = pages.findIndex(function (x) { return x.id === dragId; });
+        var to = pages.findIndex(function (x) { return x.id === p.id; });
+        if (from < 0 || to < 0) return;
+        pushHistory();
+        var moved = pages.splice(from, 1)[0];
+        pages.splice(to, 0, moved);
+        dragId = null;
+        render();
+      });
+
+      /* click actions */
+      actions.addEventListener("click", function (e) {
+        var btn = e.target.closest("button[data-action]");
+        if (!btn) return;
+        e.stopPropagation();
+        handleAction(btn.dataset.action, p.id);
+      });
+
+      /* keyboard: alt+arrows move page */
+      card.addEventListener("keydown", function (e) {
+        if (e.altKey && (e.key === "ArrowUp" || e.key === "ArrowLeft")) {
+          e.preventDefault();
+          movePage(p.id, -1);
+        } else if (e.altKey && (e.key === "ArrowDown" || e.key === "ArrowRight")) {
+          e.preventDefault();
+          movePage(p.id, 1);
+        } else if (e.key === "Delete" || e.key === "Backspace") {
+          if (document.activeElement === card) {
+            e.preventDefault();
+            handleAction("del", p.id);
+          }
+        }
+      });
+
+      pagesGrid.appendChild(card);
+    });
+
+    updatePageCount();
+    updateActionInfo();
+  }
+
+  function movePage(id, delta) {
+    var idx = pages.findIndex(function (p) { return p.id === id; });
+    if (idx < 0) return;
+    var target = idx + delta;
+    if (target < 0 || target >= pages.length) return;
+    pushHistory();
+    var tmp = pages[idx];
+    pages[idx] = pages[target];
+    pages[target] = tmp;
+    render();
+  }
+
+  function handleAction(action, id) {
+    var idx = pages.findIndex(function (p) { return p.id === id; });
+    if (idx < 0) return;
+    pushHistory();
+    switch (action) {
+      case "rotL": pages[idx].rotation = (pages[idx].rotation - 90 + 360) % 360; break;
+      case "rotR": pages[idx].rotation = (pages[idx].rotation + 90) % 360; break;
+      case "dup":
+        pages.splice(idx + 1, 0, {
+          id: uid(), name: pages[idx].name, img: pages[idx].img,
+          rotation: pages[idx].rotation, selected: false
+        });
+        break;
+      case "del": pages.splice(idx, 1); break;
+    }
+    render();
+  }
+
+  /* =============================================================
+     10. BATCH ACTIONS
+  ============================================================= */
+  selectAllChk.addEventListener("change", function () {
+    var v = selectAllChk.checked;
+    pages.forEach(function (p) { p.selected = v; });
+    render();
+  });
+
+  deleteSelectedBtn.addEventListener("click", function () {
+    var selected = pages.filter(function (p) { return p.selected; }).length;
+    if (!selected) return;
+    pushHistory();
+    pages = pages.filter(function (p) { return !p.selected; });
+    render();
+  });
+
+  reverseBtn.addEventListener("click", function () {
+    pushHistory();
+    pages.reverse();
+    render();
+  });
+
+  sortBtn.addEventListener("click", function () {
+    pushHistory();
+    pages.sort(function (a, b) {
+      return a.name.localeCompare(b.name, undefined, { numeric: true, sensitivity: "base" });
+    });
+    render();
+  });
+
+  clearBtn.addEventListener("click", function () {
+    if (!pages.length) return;
+    if (!confirm("Remove all pages? This cannot be undone from the current view.")) return;
+    pushHistory();
+    pages = [];
+    render();
+    hideResult();
+  });
+
+  /* =============================================================
+     11. LIGHTBOX
+  ============================================================= */
+  function openLightbox(id) {
+    var p = pages.find(function (x) { return x.id === id; });
+    if (!p) return;
+    lightboxId = id;
+    lightboxZoom = 1;
+    renderLightboxContent();
+    lightbox.hidden = false;
+    document.body.style.overflow = "hidden";
+    updateLightboxNav();
+  }
+  function closeLightbox() {
+    lightbox.hidden = true;
+    lightboxId = null;
+    document.body.style.overflow = "";
+  }
+  function updateLightboxNav() {
+    var idx = pages.findIndex(function (x) { return x.id === lightboxId; });
+    lightboxPrev.hidden = idx <= 0;
+    lightboxNext.hidden = idx >= pages.length - 1;
+  }
+  function renderLightboxContent() {
+    var p = pages.find(function (x) { return x.id === lightboxId; });
+    if (!p) { closeLightbox(); return; }
+    lightboxContent.innerHTML = "";
+    var cv = document.createElement("canvas");
+    var W = 900, H = 1200;
+    cv.width = W; cv.height = H;
+    var ctx = cv.getContext("2d");
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, W, H);
+    var r = ((p.rotation % 360) + 360) % 360;
+    var swap = (r === 90 || r === 270);
+    var iw = p.img.naturalWidth, ih = p.img.naturalHeight;
+    var srcW = swap ? ih : iw;
+    var srcH = swap ? iw : ih;
+    var scale = Math.min(W / srcW, H / srcH);
+    var dw = iw * scale, dh = ih * scale;
+    ctx.save();
+    ctx.translate(W / 2, H / 2);
+    ctx.rotate(r * Math.PI / 180);
+    applyFilterToContext(ctx, currentFilter);
+    ctx.drawImage(p.img, -dw / 2, -dh / 2, dw, dh);
+    ctx.restore();
+    lightboxContent.appendChild(cv);
+    lightboxContent.style.transform = "scale(" + lightboxZoom + ")";
+  }
+  lightboxClose.addEventListener("click", closeLightbox);
+  lightbox.addEventListener("click", function (e) {
+    if (e.target === lightbox) closeLightbox();
+  });
+  lightboxPrev.addEventListener("click", function () {
+    var idx = pages.findIndex(function (x) { return x.id === lightboxId; });
+    if (idx > 0) { lightboxId = pages[idx - 1].id; renderLightboxContent(); updateLightboxNav(); }
+  });
+  lightboxNext.addEventListener("click", function () {
+    var idx = pages.findIndex(function (x) { return x.id === lightboxId; });
+    if (idx < pages.length - 1) { lightboxId = pages[idx + 1].id; renderLightboxContent(); updateLightboxNav(); }
+  });
+  document.querySelector(".lightbox-zoom").addEventListener("click", function (e) {
+    var btn = e.target.closest("button[data-zoom]");
+    if (!btn) return;
+    if (btn.dataset.zoom === "in") lightboxZoom = Math.min(3, lightboxZoom + 0.25);
+    else if (btn.dataset.zoom === "out") lightboxZoom = Math.max(0.5, lightboxZoom - 0.25);
+    else lightboxZoom = 1;
+    lightboxContent.style.transform = "scale(" + lightboxZoom + ")";
+  });
+  lightbox.querySelector(".lightbox-controls").addEventListener("click", function (e) {
+    var btn = e.target.closest("button[data-lb-action]");
+    if (!btn || !lightboxId) return;
+    var action = btn.dataset.lbAction;
+    if (action === "rotL" || action === "rotR") {
+      var p = pages.find(function (x) { return x.id === lightboxId; });
+      if (!p) return;
+      pushHistory();
+      p.rotation = (p.rotation + (action === "rotL" ? -90 : 90) + 360) % 360;
+      renderLightboxContent();
+      render();
+    } else if (action === "delete") {
+      handleAction("del", lightboxId);
+      closeLightbox();
+    }
+  });
+
+  /* =============================================================
+     12. PDF BUILDER (no libraries)
+  ============================================================= */
+  function fmtNum(n) { return String(Math.round(n * 1000) / 1000); }
+  function pdfEscape(s) {
+    return String(s).replace(/\\/g, "\\\\").replace(/\(/g, "\\(").replace(/\)/g, "\\)")
+      .replace(/[\r\n]/g, " ");
+  }
+
+  function buildPDF(items, meta) {
+    var enc = new TextEncoder();
+    var chunks = [];
+    var offset = 0;
+
+    function pushBytes(u8) { chunks.push(u8); offset += u8.length; }
+    function pushStr(s) { pushBytes(enc.encode(s)); }
+
+    var offsets = [];
+    function beginObj(n) { offsets[n] = offset; pushStr(n + " 0 obj\n"); }
+    function endObj() { pushStr("endobj\n"); }
+
+    pushStr("%PDF-1.4\n");
+    pushBytes(new Uint8Array([0x25, 0xE2, 0xE3, 0xCF, 0xD3, 0x0A]));
+
+    var N = items.length;
+    var totalObjs = 3 + N * 3 + 1;
+    var infoObjNum = totalObjs;
+    var kids = [];
+    for (var i = 0; i < N; i++) kids.push((4 + i * 3) + " 0 R");
+
+    // 1: Catalog
+    beginObj(1);
+    pushStr("<< /Type /Catalog /Pages 2 0 R >>\n");
+    endObj();
+
+    // 2: Pages
+    beginObj(2);
+    pushStr("<< /Type /Pages /Kids [ " + kids.join(" ") + " ] /Count " + N + " >>\n");
+    endObj();
+
+    // 3: Font
+    beginObj(3);
+    pushStr("<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>\n");
+    endObj();
+
+    // Per-page
+    for (var p = 0; p < N; p++) {
+      var it = items[p];
+      var pageObj = 4 + p * 3;
+      var imgObj = pageObj + 1;
+      var contObj = pageObj + 2;
+
+      beginObj(pageObj);
+      pushStr(
+        "<< /Type /Page /Parent 2 0 R " +
+        "/MediaBox [0 0 " + fmtNum(it.pageW) + " " + fmtNum(it.pageH) + "] " +
+        "/Resources << /XObject << /Im0 " + imgObj + " 0 R >> " +
+        "/Font << /F1 3 0 R >> >> " +
+        "/Contents " + contObj + " 0 R >>\n"
+      );
+      endObj();
+
+      beginObj(imgObj);
+      pushStr(
+        "<< /Type /XObject /Subtype /Image " +
+        "/Width " + it.imgW + " /Height " + it.imgH + " " +
+        "/ColorSpace /DeviceRGB /BitsPerComponent 8 " +
+        "/Filter /DCTDecode /Length " + it.jpeg.length + " >>\nstream\n"
+      );
+      pushBytes(it.jpeg);
+      pushStr("\nendstream\n");
+      endObj();
+
+      var content = "q\n" +
+        fmtNum(it.drawW) + " 0 0 " + fmtNum(it.drawH) + " " +
+        fmtNum(it.x) + " " + fmtNum(it.y) + " cm\n" +
+        "/Im0 Do\nQ\n";
+
+      // Border
+      if (meta.borders) {
+        content +=
+          "q\n0.6 w\n0.6 G\n" +
+          "0 0 " + fmtNum(it.pageW) + " " + fmtNum(it.pageH) + " re\nS\nQ\n";
+      }
+
+      // Watermark
+      if (meta.watermark) {
+        var wmText = pdfEscape(meta.watermark);
+        var wmSize = Math.max(20, Math.min(it.pageW, it.pageH) / 8);
+        var wmCos = 0.7071, wmSin = 0.7071;
+        var approxW = wmText.length * wmSize * 0.55;
+        var cx = it.pageW / 2, cy = it.pageH / 2;
+        content +=
+          "q\n0.85 g\nBT\n/F1 " + fmtNum(wmSize) + " Tf\n" +
+          fmtNum(wmCos) + " " + fmtNum(wmSin) + " " +
+          fmtNum(-wmSin) + " " + fmtNum(wmCos) + " " +
+          fmtNum(cx - approxW / 2 * wmCos) + " " + fmtNum(cy - approxW / 2 * wmSin) +
+          " Tm\n(" + wmText + ") Tj\nET\nQ\n";
+      }
+
+      // Header
+      if (meta.header) {
+        var hdText = pdfEscape(meta.header);
+        var hdSize = 9;
+        content +=
+          "q\n0.35 g\nBT\n/F1 " + hdSize + " Tf\n" +
+          fmtNum(it.pageW * 0.06) + " " + fmtNum(it.pageH - 16) + " Td\n(" + hdText + ") Tj\nET\nQ\n";
+      }
+
+      // Footer
+      if (meta.footer) {
+        var ftText = pdfEscape(meta.footer);
+        var ftSize = 9;
+        content +=
+          "q\n0.35 g\nBT\n/F1 " + ftSize + " Tf\n" +
+          fmtNum(it.pageW * 0.06) + " " + fmtNum(12) + " Td\n(" + ftText + ") Tj\nET\nQ\n";
+      }
+
+      // Page number
+      if (meta.pageNumbers) {
+        var pnText = "Page " + (p + 1) + " of " + N;
+        var pnSize = 9;
+        var approxW2 = pnText.length * pnSize * 0.5;
+        var pnX = (it.pageW - approxW2) / 2;
+        var pnY = Math.max(12, it.pageH * 0.02);
+        content +=
+          "q\n0.4 g\nBT\n/F1 " + pnSize + " Tf\n" +
+          fmtNum(pnX) + " " + fmtNum(pnY) + " Td\n(" + pdfEscape(pnText) + ") Tj\nET\nQ\n";
+      }
+
+      var cBytes = enc.encode(content);
+      beginObj(contObj);
+      pushStr("<< /Length " + cBytes.length + " >>\nstream\n");
+      pushBytes(cBytes);
+      pushStr("\nendstream\n");
+      endObj();
+    }
+
+    // Info
+    var infoEntries = [];
+    if (meta.title) infoEntries.push("/Title (" + pdfEscape(meta.title) + ")");
+    if (meta.author) infoEntries.push("/Author (" + pdfEscape(meta.author) + ")");
+    infoEntries.push("/Producer (Image to PDF Converter)");
+    infoEntries.push("/Creator (Image to PDF Converter)");
+    beginObj(infoObjNum);
+    pushStr("<< " + infoEntries.join(" ") + " >>\n");
+    endObj();
+
+    var startxref = offset;
+    var size = totalObjs + 1;
+    var xref = "xref\n0 " + size + "\n0000000000 65535 f \n";
+    for (var n = 1; n < size; n++) {
+      xref += String(offsets[n] || 0).padStart(10, "0") + " 00000 n \n";
+    }
+    pushStr(xref);
+
+    pushStr(
+      "trailer\n<< /Size " + size + " /Root 1 0 R /Info " + infoObjNum + " 0 R >>\n" +
+      "startxref\n" + startxref + "\n%%EOF\n"
+    );
+
+    return new Blob(chunks, { type: "application/pdf" });
+  }
+
+  /* =============================================================
+     13. CONVERSION
+  ============================================================= */
+  function pageDimensions(page) {
+    var r = ((page.rotation % 360) + 360) % 360;
+    var swap = (r === 90 || r === 270);
+    var iw = page.img.naturalWidth, ih = page.img.naturalHeight;
+    var cw = swap ? ih : iw, ch = swap ? iw : ih;
+    var s = Math.min(1, MAX_SIDE_PX / Math.max(cw, ch));
+    return {
+      rotation: r, srcW: iw, srcH: ih, scale: s,
+      w: Math.max(1, Math.round(cw * s)),
+      h: Math.max(1, Math.round(ch * s))
+    };
+  }
+
+  function renderPageCanvas(page) {
+    var d = pageDimensions(page);
+    var canvas = document.createElement("canvas");
+    canvas.width = d.w; canvas.height = d.h;
+    var ctx = canvas.getContext("2d");
+    ctx.fillStyle = "#ffffff";
+    ctx.fillRect(0, 0, d.w, d.h);
+    ctx.save();
+    ctx.translate(d.w / 2, d.h / 2);
+    ctx.rotate(d.rotation * Math.PI / 180);
+    applyFilterToContext(ctx, currentFilter);
+    ctx.drawImage(
+      page.img,
+      -(d.srcW * d.scale) / 2, -(d.srcH * d.scale) / 2,
+      d.srcW * d.scale, d.srcH * d.scale
+    );
+    ctx.restore();
+    return { canvas: canvas, w: d.w, h: d.h };
+  }
+
+  function canvasToJpegBytes(canvas, q) {
+    return new Promise(function (resolve, reject) {
+      canvas.toBlob(function (blob) {
+        if (!blob) { reject(new Error("JPEG encoding failed")); return; }
+        var fr = new FileReader();
+        fr.onload = function () { resolve(new Uint8Array(fr.result)); };
+        fr.onerror = function () { reject(new Error("read failed")); };
+        fr.readAsArrayBuffer(blob);
+      }, "image/jpeg", q);
+    });
+  }
+
+  function safeFilename(raw) {
+    var name = (raw || "").trim().replace(/\.pdf$/i, "");
+    name = name.replace(/[\\/:*?"<>|]+/g, "-").slice(0, 80);
+    return (name || "images") + ".pdf";
+  }
+
+  function setProgress(pct, text) {
+    progressFill.style.width = pct + "%";
+    progressText.textContent = text;
+  }
+
+  function hideResult() {
+    resultPanel.hidden = true;
+  }
+
+  function startConversion() {
+    if (!pages.length) return;
+    hideResult();
+    convertBtn.disabled = true;
+    progressPanel.hidden = false;
+    setProgress(0, "Preparing pages…");
+
+    var q = parseFloat(qualityRange.value);
+    var items = [];
+    var meta = {
+      title: titleIn.value.trim(),
+      author: authorIn.value.trim(),
+      watermark: watermarkIn.value.trim(),
+      header: headerIn.value.trim(),
+      footer: footerIn.value.trim(),
+      pageNumbers: pageNumsChk.checked,
+      borders: bordersChk.checked
+    };
+
+    function computePageGeometry(cw, ch) {
+      var pageWmm, pageHmm;
+      if (sizeSel.value === "fit") {
+        var longSide = 297;
+        var ratio = cw / ch;
+        if (ratio >= 1) { pageWmm = longSide; pageHmm = longSide / ratio; }
+        else { pageHmm = longSide; pageWmm = longSide * ratio; }
+      } else if (sizeSel.value === "custom") {
+        pageWmm = Math.max(50, Math.min(1000, parseFloat(customW.value) || 210));
+        pageHmm = Math.max(50, Math.min(1000, parseFloat(customH.value) || 297));
+        if (orientSel.value === "landscape" && pageWmm < pageHmm) {
+          var t0 = pageWmm; pageWmm = pageHmm; pageHmm = t0;
+        }
+      } else {
+        var base = SIZES_MM[sizeSel.value];
+        var w = Math.min(base[0], base[1]);
+        var h = Math.max(base[0], base[1]);
+        if (orientSel.value === "landscape") { var t = w; w = h; h = t; }
+        pageWmm = w; pageHmm = h;
+      }
+      var pageW = pageWmm * MM_TO_PT;
+      var pageH = pageHmm * MM_TO_PT;
+      var m = MARGINS_MM[marginSel.value] * MM_TO_PT;
+      m = Math.min(m, Math.min(pageW, pageH) * 0.2);
+      var availW = pageW - 2 * m;
+      var availH = pageH - 2 * m;
+      var imgRatio = cw / ch;
+      var drawW = availW;
+      var drawH = availW / imgRatio;
+      if (drawH > availH) { drawH = availH; drawW = availH * imgRatio; }
+      return {
+        pageW: pageW, pageH: pageH,
+        drawW: drawW, drawH: drawH,
+        x: (pageW - drawW) / 2,
+        y: (pageH - drawH) / 2
+      };
+    }
+
+    var total = pages.length;
+    function step(i) {
+      if (i >= total) {
+        setProgress(100, "Building PDF…");
+        try {
+          var blob = buildPDF(items, meta);
+          lastPdfBlob = blob;
+          lastPdfName = safeFilename(filenameIn.value);
+          if (lastPdfUrl) URL.revokeObjectURL(lastPdfUrl);
+          lastPdfUrl = URL.createObjectURL(blob);
+          showResult(blob);
+        } catch (err) {
+          setProgress(0, "Error: " + err.message);
+        }
+        convertBtn.disabled = false;
+        return;
+      }
+
+      var pct = Math.round((i / total) * 95);
+      setProgress(pct, "Processing page " + (i + 1) + " of " + total + "…");
+
+      var page = pages[i];
+      var rendered;
+      try {
+        rendered = renderPageCanvas(page);
+      } catch (err) {
+        setProgress(0, "Error on page " + (i + 1) + ": " + err.message);
+        convertBtn.disabled = false;
+        return;
+      }
+
+      var cw = rendered.w, ch = rendered.h;
+
+      canvasToJpegBytes(rendered.canvas, q).then(function (jpeg) {
+        rendered.canvas.width = rendered.canvas.height = 0;
+        var geo = computePageGeometry(cw, ch);
+        items.push({
+          jpeg: jpeg, imgW: cw, imgH: ch,
+          pageW: geo.pageW, pageH: geo.pageH,
+          drawW: geo.drawW, drawH: geo.drawH,
+          x: geo.x, y: geo.y
+        });
+        setTimeout(function () { step(i + 1); }, 0);
+      }).catch(function (err) {
+        setProgress(0, "Error on page " + (i + 1) + ": " + err.message);
+        convertBtn.disabled = false;
+      });
+    }
+    step(0);
+  }
+
+  function showResult(blob) {
+    progressPanel.hidden = true;
+    resultPanel.hidden = false;
+    resultTitle.textContent = "PDF ready";
+    var kb = blob.size / 1024;
+    var sizeStr = kb > 1024 ? (kb / 1024).toFixed(2) + " MB" : kb.toFixed(0) + " KB";
+    resultMeta.textContent = pages.length + " page" + (pages.length === 1 ? "" : "s") +
+      " · " + sizeStr + " · ready to download";
+    resultPanel.scrollIntoView({ behavior: "smooth", block: "center" });
+  }
+
+  convertBtn.addEventListener("click", startConversion);
+
+  downloadBtn.addEventListener("click", function () {
+    if (!lastPdfBlob) return;
+    var a = document.createElement("a");
+    a.href = lastPdfUrl;
+    a.download = lastPdfName;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+  });
+
+  previewBtn.addEventListener("click", function () {
+    if (!lastPdfUrl) return;
+    window.open(lastPdfUrl, "_blank", "noopener");
+  });
+
+  shareBtn.addEventListener("click", function () {
+    if (!lastPdfBlob || !navigator.share) return;
+    var file = new File([lastPdfBlob], lastPdfName, { type: "application/pdf" });
+    navigator.share({ files: [file], title: "Image to PDF" }).catch(function () {});
+  });
+  if (navigator.share && navigator.canShare && navigator.canShare({ files: [] })) {
+    shareBtn.hidden = false;
+  }
+
+  printBtn.addEventListener("click", function () {
+    if (!lastPdfUrl) return;
+    var w = window.open(lastPdfUrl, "_blank", "noopener");
+    if (w) {
+      w.addEventListener("load", function () {
+        try { w.print(); } catch (e) {}
+      });
+    }
+  });
+
+  startOverBtn.addEventListener("click", function () {
+    pushHistory();
+    pages = [];
+    render();
+    hideResult();
+    progressPanel.hidden = true;
+    if (lastPdfUrl) {
+      URL.revokeObjectURL(lastPdfUrl);
+      lastPdfUrl = null;
+      lastPdfBlob = null;
+    }
+  });
+
+  /* =============================================================
+     14. SHORTCUTS MODAL
+  ============================================================= */
+  function openShortcuts() { shortcutsModal.hidden = false; }
+  function closeShortcuts() { shortcutsModal.hidden = true; }
+  shortcutsBtn.addEventListener("click", openShortcuts);
+  shortcutsClose.addEventListener("click", closeShortcuts);
+  shortcutsModal.addEventListener("click", function (e) {
+    if (e.target === shortcutsModal) closeShortcuts();
+  });
+
+  /* =============================================================
+     15. KEYBOARD SHORTCUTS
+  ============================================================= */
+  document.addEventListener("keydown", function (e) {
+    var tag = (e.target.tagName || "").toLowerCase();
+    var inField = tag === "input" || tag === "textarea" || tag === "select" || e.target.isContentEditable;
+
+    if (e.key === "Escape") {
+      if (!lightbox.hidden) { closeLightbox(); return; }
+      if (!shortcutsModal.hidden) { closeShortcuts(); return; }
+    }
+
+    if (inField) return;
+
+    var mod = e.metaKey || e.ctrlKey;
+
+    if (mod && e.key.toLowerCase() === "z" && !e.shiftKey) {
+      e.preventDefault(); undo(); return;
+    }
+    if (mod && ((e.key.toLowerCase() === "z" && e.shiftKey) || e.key.toLowerCase() === "y")) {
+      e.preventDefault(); redo(); return;
+    }
+    if (mod && e.key.toLowerCase() === "a") {
+      if (!pages.length) return;
+      e.preventDefault();
+      pages.forEach(function (p) { p.selected = true; });
+      render();
+      return;
+    }
+    if ((e.key === "Delete" || e.key === "Backspace") && pages.some(function (p) { return p.selected; })) {
+      e.preventDefault();
+      pushHistory();
+      pages = pages.filter(function (p) { return !p.selected; });
+      render();
+      return;
+    }
+    if (e.key === "?") {
+      e.preventDefault();
+      openShortcuts();
+    }
+  });
+
+  /* =============================================================
+     16. SCROLL REVEAL
+  ============================================================= */
+  if ("IntersectionObserver" in window) {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (e) {
+        if (e.isIntersecting) {
+          e.target.classList.add("in");
+          io.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.08, rootMargin: "0px 0px -40px 0px" });
+
+    document.querySelectorAll(
+      ".features-section .feature-card, .content-article > .container-narrow > section, .hero > .container"
+    ).forEach(function (el) {
+      el.classList.add("reveal");
+      io.observe(el);
+    });
+  }
+
+  /* =============================================================
+     17. CLEANUP
+  ============================================================= */
+  window.addEventListener("beforeunload", function () {
+    if (lastPdfUrl) URL.revokeObjectURL(lastPdfUrl);
+  });
+
+  /* =============================================================
+     18. INIT
+  ============================================================= */
+  render();
+  if (sizeSel.value === "custom") customWrap.hidden = false;
+
+})();
+</script>
+</body>
+</html>
